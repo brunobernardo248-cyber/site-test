@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #5b705a; /* verde sálvia escuro */
-            --primary-light: #8fa68c; /* verde sálvia da imagem */
-            --cream-bg: #f5f0e1; /* creme de fundo */
-            --text-dark: #2d3436;
+            --primary: #5b705a; 
+            --primary-light: #8fa68c; 
+            --cream-bg: #f9f6f0; 
+            --text-dark: #1a1d1a;
+            --accent: #d4a373; /* tom de bronze/dourado para detalhes */
         }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -23,102 +24,129 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            letter-spacing: -0.01em;
         }
         h1, h2, h3, .font-serif {
             font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
         }
         
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--cream-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
 
-        /* Background Styling */
-        .page-bg {
-            background-color: var(--cream-bg);
-            position: fixed;
-            inset: 0;
+        /* Background Elements */
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143, 166, 140, 0.1) 0%, rgba(245, 240, 225, 0) 70%);
             z-index: -1;
+        }
+
+        /* Hero Section Refinement */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #7d947a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
         }
 
         /* Sophisticated Form Container */
         .form-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(143, 166, 140, 0.2);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
-            border-radius: 2rem;
-            transition: all 0.3s ease;
+            background: white;
+            border: 1px solid rgba(143, 166, 140, 0.15);
+            box-shadow: 0 40px 100px -20px rgba(91, 112, 90, 0.12);
+            border-radius: 3rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .form-input {
-            background: white;
-            border: 1px solid #d1d5db;
-            padding: 1rem 1.25rem;
-            border-radius: 1rem;
+            background: #fdfdfd;
+            border: 1.5px solid #ececec;
+            padding: 1.1rem 1.4rem;
+            border-radius: 1.2rem;
             width: 100%;
             outline: none;
             transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
         .form-input:focus {
             border-color: var(--primary-light);
-            box-shadow: 0 0 0 4px rgba(143, 166, 140, 0.1);
+            background: white;
+            box-shadow: 0 10px 20px -5px rgba(143, 166, 140, 0.1);
         }
 
         .btn-primary {
             background: var(--primary);
             color: white;
-            padding: 1.25rem;
-            border-radius: 1rem;
+            padding: 1.3rem;
+            border-radius: 1.2rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px -5px rgba(91, 112, 90, 0.3);
+            letter-spacing: 0.15em;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 20px 30px -10px rgba(91, 112, 90, 0.4);
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(91, 112, 90, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 25px 40px -10px rgba(91, 112, 90, 0.5);
             background: #4a5c49;
         }
 
-        .whatsapp-bubble {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            z-index: 100;
+        /* Treatment List Refinement */
+        .treatment-item {
+            position: relative;
+            padding-left: 1.8rem;
+            transition: transform 0.3s ease;
         }
-
-        /* Split Section Design */
-        .hero-section {
-            background: linear-gradient(to right, var(--primary-light) 50%, var(--cream-bg) 50%);
+        .treatment-item:hover {
+            transform: translateX(5px);
         }
-        @media (max-width: 768px) {
-            .hero-section {
-                background: linear-gradient(to bottom, var(--primary-light) 40%, var(--cream-bg) 40%);
-            }
-        }
-
         .treatment-item::before {
-            content: "•";
-            color: var(--primary);
-            font-weight: bold;
-            display: inline-block; 
-            width: 1em;
-            margin-left: -1em;
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 300;
         }
+
+        /* Avatar & Bubble Refinement */
+        .professional-photo-container {
+            position: relative;
+        }
+        .professional-photo-container::after {
+            content: "";
+            position: absolute;
+            inset: -15px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .contact-pill {
+            background: white;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border-radius: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            transition: all 0.3s ease;
+        }
+        .contact-pill:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+    </style>
         .whatsapp-bubble:hover {
             transform: scale(1.1) rotate(5deg);
         }
@@ -140,6 +168,13 @@
             z-index: 101;
             border: 1px solid #f1f5f9;
             animation: slideUp 0.3s ease-out;
+        }
+        .chat-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.8);
         }
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
@@ -236,44 +271,55 @@
     <div class="page-bg"></div>
 
     <!-- Hero Section -->
-    <section class="hero-section min-h-[60vh] flex flex-col md:flex-row items-center justify-center p-6 md:p-12 gap-8 md:gap-16">
+    <section class="hero-section min-h-[70vh] flex flex-col md:flex-row items-center justify-center p-8 md:p-20 gap-12 md:gap-24">
+        <!-- Background Elements -->
+        <div class="bg-circle w-[500px] h-[500px] -top-20 -left-20"></div>
+        <div class="bg-circle w-[300px] h-[300px] -bottom-10 -right-10"></div>
+
         <!-- Left Side: Branding & Treatments -->
-        <div class="flex-1 max-w-xl animate__animated animate__fadeInLeft">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center text-primary-dark">
-                    <i class="fas fa-shoe-prints text-3xl rotate-45"></i>
+        <div class="flex-1 max-w-xl animate__animated animate__fadeInLeft z-10">
+            <div class="flex flex-col gap-6 mb-10">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full border border-white/20 w-fit">
+                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Podologia de Excelência</span>
                 </div>
-                <div>
-                    <h1 class="text-4xl md:text-6xl font-bold text-emerald-950 italic leading-tight">Podóloga<br>Lavínia Silva</h1>
-                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white italic leading-[1.1]">Lavínia Silva</h1>
+                <p class="text-white/70 text-lg font-light max-w-md">Especialista em cuidados clínicos avançados para a saúde e bem-estar dos seus pés.</p>
             </div>
 
-            <div class="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/20">
-                <h2 class="text-xl font-bold mb-4 italic text-emerald-900">Tratamentos:</h2>
-                <ul class="space-y-3 text-emerald-950 font-medium ml-4">
-                    <li class="treatment-item">Unha inflamada</li>
-                    <li class="treatment-item">Unha encravada</li>
-                    <li class="treatment-item">Calos e calosidades</li>
-                    <li class="treatment-item">Rachaduras e fissuras</li>
-                    <li class="treatment-item">Órtese para correção da deformidade da unha</li>
+            <div class="hero-content-card p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
+                <h2 class="text-xs font-bold mb-8 uppercase tracking-[0.3em] text-accent/90">Especialidades:</h2>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-white/90 font-medium">
+                    <li class="treatment-item text-sm">Unha inflamada</li>
+                    <li class="treatment-item text-sm">Unha encravada</li>
+                    <li class="treatment-item text-sm">Calos e calosidades</li>
+                    <li class="treatment-item text-sm">Rachaduras e fissuras</li>
+                    <li class="treatment-item text-sm col-span-full">Órtese para correção de deformidade</li>
                 </ul>
             </div>
         </div>
 
         <!-- Right Side: Photo & Quick Contact -->
-        <div class="flex-1 flex flex-col items-center justify-center animate__animated animate__fadeInRight">
-            <div class="relative group">
-                <div class="w-64 h-64 md:w-80 md:h-80 bg-primary-light rounded-full overflow-hidden border-8 border-white shadow-2xl transition-transform duration-500 group-hover:scale-105">
-                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800" alt="Lavínia Silva" class="w-full h-full object-cover grayscale-[20%]">
+        <div class="flex-1 flex flex-col items-center justify-center animate__animated animate__fadeInRight z-10">
+            <div class="professional-photo-container">
+                <div class="w-72 h-72 md:w-[420px] md:h-[420px] bg-white rounded-full overflow-hidden border-[12px] border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 hover:rotate-2">
+                    <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" alt="Lavínia Silva" class="w-full h-full object-cover">
                 </div>
-                <div class="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl flex flex-col gap-2">
-                    <a href="https://wa.me/5532999036230" target="_blank" class="flex items-center gap-3 text-sm font-bold text-emerald-900 hover:text-emerald-600 transition-colors">
-                        <i class="fab fa-whatsapp text-lg text-green-500"></i>
-                        (32) 99903-6230
+                
+                <!-- Floating Contacts -->
+                <div class="absolute -bottom-6 -left-6 md:-left-12 flex flex-col gap-3">
+                    <a href="https://wa.me/5532999036230" target="_blank" class="contact-pill flex items-center gap-3">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-800 tracking-tight">(32) 99903-6230</span>
                     </a>
-                    <a href="https://instagram.com/laviniapodologa" target="_blank" class="flex items-center gap-3 text-sm font-bold text-emerald-900 hover:text-emerald-600 transition-colors">
-                        <i class="fab fa-instagram text-lg text-pink-500"></i>
-                        @laviniapodologa
+                    <a href="https://instagram.com/laviniapodologa" target="_blank" class="contact-pill flex items-center gap-3">
+                        <div class="w-8 h-8 bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <span class="text-xs font-bold text-slate-800 tracking-tight">@laviniapodologa</span>
                     </a>
                 </div>
             </div>
@@ -281,11 +327,12 @@
     </section>
 
     <!-- Main Content: Registration Form -->
-    <main class="flex flex-col items-center justify-center p-6 pb-20">
-        <div class="form-card w-full max-w-xl p-8 lg:p-12 animate__animated animate__fadeInUp">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl lg:text-3xl font-bold text-slate-800 mb-2 italic">Pré-Agendamento Digital</h2>
-                <p class="text-slate-500 text-sm font-medium">Preencha seus dados para iniciarmos seu cuidado.</p>
+    <main class="flex flex-col items-center justify-center p-8 md:p-24 bg-white/50 relative">
+        <div class="form-card w-full max-w-2xl p-10 md:p-16 animate__animated animate__fadeInUp">
+            <div class="text-center mb-12">
+                <div class="w-12 h-1 bg-accent/30 mx-auto mb-6 rounded-full"></div>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3 italic tracking-tight">Agendamento Online</h2>
+                <p class="text-slate-400 text-sm font-light tracking-wide">Inicie sua jornada de cuidado preenchendo o formulário abaixo.</p>
             </div>
 
             <form id="registrationForm" class="space-y-6">
@@ -369,7 +416,7 @@
     <div id="chatbot-window">
         <div class="chat-header">
             <div class="flex items-center gap-3">
-                <i class="fas fa-user-nurse"></i>
+                <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" class="chat-avatar" alt="Lavínia Silva">
                 <span class="font-bold text-sm">Assistente Lavínia Silva</span>
             </div>
             <i class="fas fa-times cursor-pointer opacity-70 hover:opacity-100" onclick="toggleChat()"></i>
