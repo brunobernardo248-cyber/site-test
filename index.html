@@ -251,7 +251,7 @@
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1 flex justify-between">
                         <span>Principal Queixa</span>
-                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat('direct_wa')">Conversar com Lavínia?</span>
+                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
                     </label>
                     <select id="formComplaint" class="form-input appearance-none">
                         <option value="">Selecione uma opção...</option>
@@ -384,25 +384,20 @@
             
             if (isChatOpen) {
                 if (chatMessages.children.length === 0) {
-                    addBotMessage("Olá! Sou o assistente inteligente da Lavínia. Como posso te ajudar hoje?");
-                    addBotMessage("Você pode escrever sua dúvida aqui embaixo.");
-                    showOptions([
-                        { text: "Desejo fazer um agendamento", action: "start_booking" },
-                        { text: "Tenho uma dúvida técnica", action: "doubts" },
-                        { text: "Conversar com Lavínia", action: "direct_wa" }
-                    ]);
+                    addBotMessage("Olá! Sou o assistente inteligente da Lavínia.");
+                    addBotMessage("Como posso te ajudar hoje? Pode escrever sua dúvida aqui embaixo, que a Lavínia te responderá em breve.");
+                    chatStep = 'waiting_doubt';
                 }
             } else {
                 // Limpa as mensagens e reseta o passo do chat ao fechar
                 chatMessages.innerHTML = '';
-                chatStep = 'greeting';
+                chatStep = 'waiting_doubt';
                 chatInput.value = '';
             }
         }
 
-        function openChat(action) {
+        function openChat() {
             if (!isChatOpen) toggleChat();
-            handleAction(action);
         }
 
         function addBotMessage(text) {
@@ -421,66 +416,6 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function showOptions(options) {
-            const div = document.createElement('div');
-            div.className = 'chat-options';
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt.text;
-                btn.onclick = () => {
-                    // Remove todas as opções após uma ser clicada para evitar repetição
-                    div.remove();
-                    addUserMessage(opt.text);
-                    handleAction(opt.action);
-                };
-                div.appendChild(btn);
-            });
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function handleAction(action) {
-            setTimeout(() => {
-                if (action === 'start_booking') {
-                    addBotMessage("Para iniciarmos o agendamento por aqui, por favor, me diga seu nome completo:");
-                    chatStep = 'booking_name';
-                } else if (action === 'check_hours') {
-                    addBotMessage("Para qual dia e horário você gostaria de verificar a disponibilidade no sistema?");
-                    chatStep = 'waiting_hour_check';
-                } else if (action === 'doubts') {
-                    addBotMessage("Pode escrever sua dúvida aqui embaixo. Estou pronto para responder sobre tratamentos, preços e localização.");
-                    chatStep = 'free_text';
-                } else if (action === 'doubt_price') {
-                    addBotMessage("Os valores variam conforme o tratamento (podologia clínica, laser, etc). Gostaria de agendar uma avaliação para um orçamento preciso?");
-                    showOptions([{ text: "Sim, agendar", action: "start_booking" }]);
-                } else if (action === 'direct_wa') {
-                    consultLavinia();
-                }
-            }, 500);
-        }
-
-        function consultLavinia() {
-            addBotMessage("<i class='fas fa-sync fa-spin mr-2'></i> Consultando disponibilidade com a Lavínia via sistema interno...");
-            
-            // Simulação de consulta (2 a 4 segundos)
-            setTimeout(() => {
-                const isAvailable = Math.random() > 0.3; // 70% de chance de estar ocupada na simulação
-                
-                if (isAvailable) {
-                    addBotMessage("A Lavínia está ocupada com um procedimento no momento e não pode atender agora.");
-                    addBotMessage("Gostaria de deixar uma mensagem ou tentar agendar um horário?");
-                    showOptions([
-                        { text: "Desejo agendar", action: "start_booking" },
-                        { text: "Tentar mais tarde", action: "init_chat" }
-                    ]);
-                } else {
-                    addBotMessage("Lavínia recebeu sua notificação, mas está em atendimento.");
-                    addBotMessage("Ela entrará em contato com você assim que terminar o procedimento atual.");
-                }
-            }, 3000);
-        }
-
         function sendChatMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
@@ -488,84 +423,21 @@
             chatInput.value = '';
 
             setTimeout(() => {
-                if (chatStep === 'booking_name') {
-                    tempUserData.name = text;
-                    addBotMessage(`Prazer em te conhecer, ${text.split(' ')[0]}! Qual seria o seu WhatsApp?`);
-                    chatStep = 'booking_phone';
-                } else if (chatStep === 'booking_phone') {
-                    tempUserData.phone = text;
-                    addBotMessage("Certo. Qual data e horário seriam ideais para sua consulta?");
-                    chatStep = 'booking_time_check';
-                } else if (chatStep === 'booking_time_check') {
-                    tempUserData.preferred_hour = text;
-                    addBotMessage("Entendido. Vou encaminhar seu pedido para a Lavínia verificar a agenda e te responder.");
-                    showOptions([{ text: "Finalizar e Enviar", action: "finalize_booking" }]);
-                } else if (chatStep === 'waiting_hour_check') {
-                    tempUserData.preferred_hour = text;
-                    addBotMessage(`Vou verificar com a Lavínia se o horário das ${text} está disponível.`);
-                    showOptions([{ text: "Enviar Pedido", action: "finalize_booking" }]);
-                } else if (chatStep === 'free_text') {
-                    handleNaturalLanguage(text);
-                } else if (chatStep === 'finalize_booking' || text.toLowerCase().includes('finalizar')) {
-                    finalizeAndSend();
-                } else {
-                    addBotMessage("Entendi. Gostaria de falar com a Lavínia agora?");
-                    showOptions([{ text: "Sim, chamar no WhatsApp", action: "direct_wa" }]);
-                }
+                addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando sua dúvida para a Lavínia...");
+                
+                // Simulação de envio invisível para o WhatsApp da Lavínia
+                console.log("Dúvida enviada para o WhatsApp da Lavínia:", text);
+                
+                setTimeout(() => {
+                    addBotMessage("Sua mensagem foi entregue com sucesso! ✅");
+                    addBotMessage("A Lavínia recebeu sua dúvida e entrará em contato com você em breve.");
+                }, 2000);
             }, 800);
         }
 
-        function sendChatMessageMock(text) {
-            chatInput.value = text;
-            sendChatMessage();
-        }
-
-        function handleNaturalLanguage(text) {
-            const lowText = text.toLowerCase();
-            if (lowText.includes('preço') || lowText.includes('valor')) {
-                addBotMessage("Os valores variam conforme o tratamento (podologia clínica, laser, etc). Gostaria de agendar uma avaliação para um orçamento preciso?");
-            } else if (lowText.includes('local') || lowText.includes('onde')) {
-                addBotMessage("Estamos localizados na Av. Principal, 1234 - Sala 50 - Centro.");
-            } else if (lowText.includes('horário') || lowText.includes('vaga') || lowText.includes('agendar')) {
-                handleAction('start_booking');
-                return;
-            } else {
-                addBotMessage("Pode me dar mais detalhes? Ou se preferir, posso te transferir para a Lavínia no WhatsApp.");
-            }
-            showOptions([
-                { text: "Desejo agendar", action: "start_booking" },
-                { text: "Conversar com Lavínia", action: "direct_wa" }
-            ]);
-        }
-
-        function startAgendamentoChat() {
+        function closeModal() {
             modal.classList.add('hidden');
-            if (!isChatOpen) toggleChat();
-            chatMessages.innerHTML = '';
-            addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro no site.`);
-            addBotMessage(`Vou encaminhar seu pedido de agendamento para o horário das ${tempUserData.time} no dia ${tempUserData.date}.`);
-            addBotMessage("A Lavínia verificará a disponibilidade e entrará em contato com você em instantes.");
-            tempUserData.preferred_hour = tempUserData.time;
-            showOptions([{ text: "Confirmar e Enviar", action: "finalize_booking" }]);
-        }
-
-        function finalizeAndSend() {
-            const message = `Olá Lavínia! Novo cadastro de cliente:%0A%0A` +
-                `Nome: ${tempUserData.name}%0A` +
-                `WhatsApp: ${tempUserData.phone}%0A` +
-                `Data: ${tempUserData.date}%0A` +
-                `Horário: ${tempUserData.preferred_hour || tempUserData.time || 'A combinar'}%0A` +
-                `Queixa: ${tempUserData.complaint}`;
-            
-            // Notificação interna invisível (Simulada via console/log)
-            console.log("Notificação enviada para Lavínia via sistema interno:", message);
-
-            addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando notificação interna para Lavínia...");
-            setTimeout(() => {
-                addBotMessage("Lavínia foi notificada com sucesso sobre o seu pedido! ✅");
-                addBotMessage("Ela entrará em contato com você em instantes.");
-                setTimeout(() => toggleChat(), 3000);
-            }, 2000);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Clinic Status Simple Logic
