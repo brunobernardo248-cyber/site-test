@@ -315,9 +315,9 @@
             <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
                 <i class="fas fa-check"></i>
             </div>
-            <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Cadastro Iniciado!</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-8">Recebemos seus dados preliminares. Nosso sistema está pronto para verificar sua vaga.</p>
-            <button onclick="startAgendamentoChat()" class="btn-primary w-full italic">Conversar com Lavínia</button>
+            <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Dados Recebidos!</h3>
+            <p class="text-slate-500 text-sm leading-relaxed mb-8">Agora, clique abaixo para enviar seu pedido de agendamento para a Lavínia verificar a vaga.</p>
+            <button onclick="finalizeAndSend()" class="btn-primary w-full italic">Enviar para Lavínia</button>
         </div>
     </div>
 
@@ -331,9 +331,6 @@
         let isChatOpen = false;
         let chatStep = 'greeting';
         let tempUserData = {};
-
-        // Mock de horários ocupados (exemplo)
-        const occupiedSlots = ["14:00", "15:00", "10:30", "16:00"];
 
         // Form Submission
         form.addEventListener('submit', (e) => {
@@ -450,23 +447,13 @@
                     addBotMessage("Certo. Qual data e horário seriam ideais para sua consulta?");
                     chatStep = 'booking_time_check';
                 } else if (chatStep === 'booking_time_check') {
-                    addBotMessage(`<i class="fas fa-spinner fa-spin mr-2"></i> Verificando disponibilidade no sistema...`);
-                    setTimeout(() => {
-                        const isOccupied = occupiedSlots.some(slot => text.includes(slot));
-                        if (isOccupied) {
-                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> O horário das ${text} está ocupado.`);
-                            addBotMessage("Por favor, sugira outro horário para que eu possa verificar novamente:");
-                        } else {
-                            tempUserData.preferred_hour = text;
-                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> Horário Disponível!`);
-                            addBotMessage(`O horário das ${text} está vago. Deseja finalizar o agendamento?`);
-                            showOptions([{ text: "Finalizar agora", action: "finalize_booking" }]);
-                        }
-                    }, 2000);
+                    tempUserData.preferred_hour = text;
+                    addBotMessage("Entendido. Vou encaminhar seu pedido para a Lavínia verificar a agenda e te responder.");
+                    showOptions([{ text: "Finalizar e Enviar", action: "finalize_booking" }]);
                 } else if (chatStep === 'waiting_hour_check') {
-                    // Re-usa lógica de rastreio
-                    chatStep = 'booking_time_check';
-                    sendChatMessageMock(text); 
+                    tempUserData.preferred_hour = text;
+                    addBotMessage(`Vou verificar com a Lavínia se o horário das ${text} está disponível.`);
+                    showOptions([{ text: "Enviar Pedido", action: "finalize_booking" }]);
                 } else if (chatStep === 'free_text') {
                     handleNaturalLanguage(text);
                 } else if (chatStep === 'finalize_booking' || text.toLowerCase().includes('finalizar')) {
@@ -506,21 +493,10 @@
             if (!isChatOpen) toggleChat();
             chatMessages.innerHTML = '';
             addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro no site.`);
-            addBotMessage(`Vou verificar o horário das ${tempUserData.time} no dia ${tempUserData.date} para você.`);
-            
-            setTimeout(() => {
-                const isOccupied = occupiedSlots.some(slot => tempUserData.time.includes(slot));
-                if (isOccupied) {
-                    addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Infelizmente o horário das ${tempUserData.time} acabou de ser preenchido.`);
-                    addBotMessage("Pode me dizer outro horário que ficaria bom para você?");
-                    chatStep = 'booking_time_check';
-                } else {
-                    addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> Horário Disponível!`);
-                    addBotMessage("Deseja confirmar sua reserva agora?");
-                    tempUserData.preferred_hour = tempUserData.time;
-                    showOptions([{ text: "Finalizar Reserva", action: "finalize_booking" }]);
-                }
-            }, 1500);
+            addBotMessage(`Vou encaminhar seu pedido de agendamento para o horário das ${tempUserData.time} no dia ${tempUserData.date}.`);
+            addBotMessage("A Lavínia verificará a disponibilidade e entrará em contato com você em instantes.");
+            tempUserData.preferred_hour = tempUserData.time;
+            showOptions([{ text: "Confirmar e Enviar", action: "finalize_booking" }]);
         }
 
         function finalizeAndSend() {
