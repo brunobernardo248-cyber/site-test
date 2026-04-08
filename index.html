@@ -202,21 +202,6 @@
             font-size: 14px;
             background: #f8fafc;
         }
-        .voice-btn {
-            color: #64748b;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.2s;
-            font-size: 18px;
-        }
-        .voice-btn:hover { color: #ef4444; background: #fee2e2; }
-        .voice-active { animation: pulseRed 1.5s infinite; color: #ef4444 !important; }
-        @keyframes pulseRed {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
@@ -248,25 +233,25 @@
                     <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">WhatsApp</label>
-                        <input type="tel" id="formPhone" class="form-input" placeholder="(00) 00000-0000" required>
+                        <input type="tel" id="formPhone" class="form-input text-sm px-4" placeholder="(00) 00000-0000" required>
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Data</label>
-                        <input type="date" id="formDate" class="form-input" required>
+                        <input type="date" id="formDate" class="form-input text-sm px-4" required>
                     </div>
-                    <div class="space-y-1">
+                    <div class="col-span-2 md:col-span-1 space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Horário</label>
-                        <input type="time" id="formTime" class="form-input" required>
+                        <input type="time" id="formTime" class="form-input text-sm px-4" required>
                     </div>
                 </div>
 
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1 flex justify-between">
                         <span>Principal Queixa</span>
-                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat('check_hours')">Verificar horário vago?</span>
+                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat('direct_wa')">Conversar com Lavínia?</span>
                     </label>
                     <select id="formComplaint" class="form-input appearance-none">
                         <option value="">Selecione uma opção...</option>
@@ -318,10 +303,7 @@
             <!-- Messages injected here -->
         </div>
         <div class="chat-input-area">
-            <div class="voice-btn" id="voiceBtn" title="Falar por áudio">
-                <i class="fas fa-microphone"></i>
-            </div>
-            <input type="text" id="chatInput" class="chat-input" placeholder="Escreva ou fale sua dúvida...">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escreva sua dúvida...">
             <button id="chatSendBtn" class="text-emerald-700 p-2"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -335,7 +317,7 @@
             </div>
             <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Cadastro Iniciado!</h3>
             <p class="text-slate-500 text-sm leading-relaxed mb-8">Recebemos seus dados preliminares. Nosso sistema está pronto para verificar sua vaga.</p>
-            <button onclick="startAgendamentoChat()" class="btn-primary w-full italic">Verificar Vaga no Sistema</button>
+            <button onclick="startAgendamentoChat()" class="btn-primary w-full italic">Conversar com Lavínia</button>
         </div>
     </div>
 
@@ -367,48 +349,29 @@
         });
 
         const chatSendBtn = document.getElementById('chatSendBtn');
-        const voiceBtn = document.getElementById('voiceBtn');
 
         chatSendBtn.onclick = () => sendChatMessage();
         chatInput.onkeypress = (e) => { if (e.key === 'Enter') sendChatMessage(); };
 
-        // Voice Simulation Logic
-        let isRecording = false;
-        voiceBtn.onclick = () => {
-            isRecording = !isRecording;
-            if (isRecording) {
-                voiceBtn.classList.add('voice-active');
-                chatInput.placeholder = "Ouvindo... Fale agora";
-                // Simulação: após 3 segundos "transcreve" algo
-                setTimeout(() => {
-                    if (isRecording) stopRecordingSim("Olá, gostaria de saber se tem vaga amanhã?");
-                }, 3000);
-            } else {
-                stopRecordingSim();
-            }
-        };
-
-        function stopRecordingSim(transcription = "") {
-            isRecording = false;
-            voiceBtn.classList.remove('voice-active');
-            chatInput.placeholder = "Escreva ou fale sua dúvida...";
-            if (transcription) {
-                chatInput.value = transcription;
-                setTimeout(() => sendChatMessage(), 500);
-            }
-        }
-
         function toggleChat() {
             isChatOpen = !isChatOpen;
             chatWindow.style.display = isChatOpen ? 'flex' : 'none';
-            if (isChatOpen && chatMessages.children.length === 0) {
-                addBotMessage("Olá! Sou o assistente inteligente da Lavínia. Como posso te ajudar hoje?");
-                addBotMessage("Você pode **escrever sua dúvida** ou clicar no **microfone** para falar comigo.");
-                showOptions([
-                    { text: "Desejo fazer um agendamento", action: "start_booking" },
-                    { text: "Tenho uma dúvida técnica", action: "doubts" },
-                    { text: "Rastrear vaga no sistema", action: "check_hours" }
-                ]);
+            
+            if (isChatOpen) {
+                if (chatMessages.children.length === 0) {
+                    addBotMessage("Olá! Sou o assistente inteligente da Lavínia. Como posso te ajudar hoje?");
+                    addBotMessage("Você pode escrever sua dúvida aqui embaixo.");
+                    showOptions([
+                        { text: "Desejo fazer um agendamento", action: "start_booking" },
+                        { text: "Tenho uma dúvida técnica", action: "doubts" },
+                        { text: "Conversar com Lavínia", action: "direct_wa" }
+                    ]);
+                }
+            } else {
+                // Limpa as mensagens e reseta o passo do chat ao fechar
+                chatMessages.innerHTML = '';
+                chatStep = 'greeting';
+                chatInput.value = '';
             }
         }
 
@@ -453,14 +416,17 @@
         function handleAction(action) {
             setTimeout(() => {
                 if (action === 'start_booking') {
-                    addBotMessage("Para iniciarmos o agendamento por aqui, por favor, me diga seu **nome completo**:");
+                    addBotMessage("Para iniciarmos o agendamento por aqui, por favor, me diga seu nome completo:");
                     chatStep = 'booking_name';
                 } else if (action === 'check_hours') {
-                    addBotMessage("Para qual **dia e horário** você gostaria de rastrear uma vaga no sistema?");
+                    addBotMessage("Para qual dia e horário você gostaria de verificar a disponibilidade no sistema?");
                     chatStep = 'waiting_hour_check';
                 } else if (action === 'doubts') {
-                    addBotMessage("Pode escrever sua dúvida aqui embaixo ou falar no microfone. Estou pronto para responder sobre tratamentos, preços e localização.");
+                    addBotMessage("Pode escrever sua dúvida aqui embaixo. Estou pronto para responder sobre tratamentos, preços e localização.");
                     chatStep = 'free_text';
+                } else if (action === 'doubt_price') {
+                    addBotMessage("Os valores variam conforme o tratamento (podologia clínica, laser, etc). Gostaria de agendar uma avaliação para um orçamento preciso?");
+                    showOptions([{ text: "Sim, agendar", action: "start_booking" }]);
                 } else if (action === 'direct_wa') {
                     addBotMessage("Encaminhando para o WhatsApp da Lavínia...");
                     window.open('https://wa.me/5511999999999', '_blank');
@@ -477,23 +443,23 @@
             setTimeout(() => {
                 if (chatStep === 'booking_name') {
                     tempUserData.name = text;
-                    addBotMessage(`Prazer em te conhecer, ${text.split(' ')[0]}! Qual seria o seu **WhatsApp**?`);
+                    addBotMessage(`Prazer em te conhecer, ${text.split(' ')[0]}! Qual seria o seu WhatsApp?`);
                     chatStep = 'booking_phone';
                 } else if (chatStep === 'booking_phone') {
                     tempUserData.phone = text;
-                    addBotMessage("Certo. Qual **data e horário** seriam ideais para sua consulta?");
+                    addBotMessage("Certo. Qual data e horário seriam ideais para sua consulta?");
                     chatStep = 'booking_time_check';
                 } else if (chatStep === 'booking_time_check') {
-                    addBotMessage(`<i class="fas fa-microchip fa-spin mr-2"></i> Rastreando disponibilidade no sistema...`);
+                    addBotMessage(`<i class="fas fa-spinner fa-spin mr-2"></i> Verificando disponibilidade no sistema...`);
                     setTimeout(() => {
                         const isOccupied = occupiedSlots.some(slot => text.includes(slot));
                         if (isOccupied) {
-                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> O horário das **${text}** está ocupado.`);
-                            addBotMessage("Por favor, sugira outro horário para que eu possa rastrear novamente:");
+                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> O horário das ${text} está ocupado.`);
+                            addBotMessage("Por favor, sugira outro horário para que eu possa verificar novamente:");
                         } else {
                             tempUserData.preferred_hour = text;
-                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Localizada!**`);
-                            addBotMessage(`O horário das **${text}** está vago. Deseja finalizar o agendamento?`);
+                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> Horário Disponível!`);
+                            addBotMessage(`O horário das ${text} está vago. Deseja finalizar o agendamento?`);
                             showOptions([{ text: "Finalizar agora", action: "finalize_booking" }]);
                         }
                     }, 2000);
@@ -531,7 +497,7 @@
             }
             showOptions([
                 { text: "Desejo agendar", action: "start_booking" },
-                { text: "Falar no WhatsApp", action: "direct_wa" }
+                { text: "Conversar com Lavínia", action: "direct_wa" }
             ]);
         }
 
@@ -540,17 +506,17 @@
             if (!isChatOpen) toggleChat();
             chatMessages.innerHTML = '';
             addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro no site.`);
-            addBotMessage(`Rastreei seu horário das **${tempUserData.time}** no dia **${tempUserData.date}**.`);
+            addBotMessage(`Vou verificar o horário das ${tempUserData.time} no dia ${tempUserData.date} para você.`);
             
             setTimeout(() => {
                 const isOccupied = occupiedSlots.some(slot => tempUserData.time.includes(slot));
                 if (isOccupied) {
-                    addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Infelizmente o horário das **${tempUserData.time}** acabou de ser preenchido.`);
+                    addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Infelizmente o horário das ${tempUserData.time} acabou de ser preenchido.`);
                     addBotMessage("Pode me dizer outro horário que ficaria bom para você?");
                     chatStep = 'booking_time_check';
                 } else {
-                    addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Confirmada!**`);
-                    addBotMessage("Deseja finalizar sua reserva agora para garantir o horário?");
+                    addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> Horário Disponível!`);
+                    addBotMessage("Deseja confirmar sua reserva agora?");
                     tempUserData.preferred_hour = tempUserData.time;
                     showOptions([{ text: "Finalizar Reserva", action: "finalize_booking" }]);
                 }
