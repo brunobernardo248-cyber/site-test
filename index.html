@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lavínia - Cadastro de Clientes Podologia</title>
+    <title>Lavínia Podóloga</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -190,15 +190,32 @@
             padding: 15px;
             border-top: 1px solid #f1f5f9;
             display: flex;
+            align-items: center;
             gap: 10px;
         }
         .chat-input {
             flex: 1;
             border: 1px solid #e2e8f0;
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 10px 15px;
+            border-radius: 20px;
             outline: none;
             font-size: 14px;
+            background: #f8fafc;
+        }
+        .voice-btn {
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+        .voice-btn:hover { color: #ef4444; background: #fee2e2; }
+        .voice-active { animation: pulseRed 1.5s infinite; color: #ef4444 !important; }
+        @keyframes pulseRed {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -212,7 +229,7 @@
             <div class="w-16 h-16 bg-emerald-900 rounded-2xl flex items-center justify-center text-white shadow-xl mb-6">
                 <i class="fas fa-shoe-prints text-2xl rotate-45"></i>
             </div>
-            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-950 tracking-tight italic">Lavínia</h1>
+            <h1 class="text-4xl lg:text-5xl font-bold text-emerald-950 tracking-tight italic">Lavínia Podóloga</h1>
             <p class="text-[10px] font-bold uppercase tracking-[0.4em] text-emerald-700 mt-2">Podologia Clínica de Alta Performance</p>
         </div>
     </header>
@@ -231,14 +248,18 @@
                     <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">WhatsApp</label>
                         <input type="tel" id="formPhone" class="form-input" placeholder="(00) 00000-0000" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Data Desejada</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Data</label>
                         <input type="date" id="formDate" class="form-input" required>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Horário</label>
+                        <input type="time" id="formTime" class="form-input" required>
                     </div>
                 </div>
 
@@ -275,7 +296,8 @@
 
     <!-- Footer -->
     <footer class="py-8 text-center text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase">
-        &copy; 2026 Lavínia Podologia. Todos os direitos reservados.
+        <p class="mb-2">laviniapodologa.com.br</p>
+        &copy; 2026 Lavínia Podóloga. Todos os direitos reservados.
     </footer>
 
     <!-- Chatbot Toggle -->
@@ -296,8 +318,11 @@
             <!-- Messages injected here -->
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Digite aqui...">
-            <button onclick="sendChatMessage()" class="text-emerald-700"><i class="fas fa-paper-plane"></i></button>
+            <div class="voice-btn" id="voiceBtn" title="Falar por áudio">
+                <i class="fas fa-microphone"></i>
+            </div>
+            <input type="text" id="chatInput" class="chat-input" placeholder="Escreva ou fale sua dúvida...">
+            <button id="chatSendBtn" class="text-emerald-700 p-2"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -335,20 +360,54 @@
                 name: document.getElementById('formName').value,
                 phone: document.getElementById('formPhone').value,
                 date: document.getElementById('formDate').value,
+                time: document.getElementById('formTime').value,
                 complaint: document.getElementById('formComplaint').value
             };
             modal.classList.remove('hidden');
         });
+
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+
+        chatSendBtn.onclick = () => sendChatMessage();
+        chatInput.onkeypress = (e) => { if (e.key === 'Enter') sendChatMessage(); };
+
+        // Voice Simulation Logic
+        let isRecording = false;
+        voiceBtn.onclick = () => {
+            isRecording = !isRecording;
+            if (isRecording) {
+                voiceBtn.classList.add('voice-active');
+                chatInput.placeholder = "Ouvindo... Fale agora";
+                // Simulação: após 3 segundos "transcreve" algo
+                setTimeout(() => {
+                    if (isRecording) stopRecordingSim("Olá, gostaria de saber se tem vaga amanhã?");
+                }, 3000);
+            } else {
+                stopRecordingSim();
+            }
+        };
+
+        function stopRecordingSim(transcription = "") {
+            isRecording = false;
+            voiceBtn.classList.remove('voice-active');
+            chatInput.placeholder = "Escreva ou fale sua dúvida...";
+            if (transcription) {
+                chatInput.value = transcription;
+                setTimeout(() => sendChatMessage(), 500);
+            }
+        }
 
         function toggleChat() {
             isChatOpen = !isChatOpen;
             chatWindow.style.display = isChatOpen ? 'flex' : 'none';
             if (isChatOpen && chatMessages.children.length === 0) {
                 addBotMessage("Olá! Sou o assistente inteligente da Lavínia. Como posso te ajudar hoje?");
+                addBotMessage("Você pode **escrever sua dúvida** ou clicar no **microfone** para falar comigo.");
                 showOptions([
-                    { text: "Verificar vaga no sistema", action: "check_hours" },
-                    { text: "Dúvidas sobre tratamentos", action: "doubts" },
-                    { text: "Falar com a Lavínia", action: "direct_wa" }
+                    { text: "Desejo fazer um agendamento", action: "start_booking" },
+                    { text: "Tenho uma dúvida técnica", action: "doubts" },
+                    { text: "Rastrear vaga no sistema", action: "check_hours" }
                 ]);
             }
         }
@@ -393,23 +452,18 @@
 
         function handleAction(action) {
             setTimeout(() => {
-                if (action === 'check_hours') {
+                if (action === 'start_booking') {
+                    addBotMessage("Para iniciarmos o agendamento por aqui, por favor, me diga seu **nome completo**:");
+                    chatStep = 'booking_name';
+                } else if (action === 'check_hours') {
                     addBotMessage("Para qual **dia e horário** você gostaria de rastrear uma vaga no sistema?");
                     chatStep = 'waiting_hour_check';
                 } else if (action === 'doubts') {
-                    addBotMessage("Qual sua dúvida principal? Pode digitar ou escolher uma opção:");
-                    showOptions([
-                        { text: "Preço das consultas", action: "doubt_price" },
-                        { text: "Localização", action: "doubt_loc" }
-                    ]);
+                    addBotMessage("Pode escrever sua dúvida aqui embaixo ou falar no microfone. Estou pronto para responder sobre tratamentos, preços e localização.");
+                    chatStep = 'free_text';
                 } else if (action === 'direct_wa') {
                     addBotMessage("Encaminhando para o WhatsApp da Lavínia...");
                     window.open('https://wa.me/5511999999999', '_blank');
-                } else if (action === 'doubt_price') {
-                    addBotMessage("Nossos valores variam conforme o tratamento. Gostaria de rastrear uma vaga?");
-                    showOptions([{ text: "Sim, rastrear vaga", action: "check_hours" }]);
-                } else if (action === 'doubt_loc') {
-                    addBotMessage("Estamos na Av. Principal, 1234 - Sala 50 - Centro.");
                 }
             }, 500);
         }
@@ -421,28 +475,36 @@
             chatInput.value = '';
 
             setTimeout(() => {
-                if (chatStep === 'waiting_hour_check') {
-                    addBotMessage(`<i class="fas fa-microchip fa-spin mr-2"></i> Rastreando vaga para **${text}** no sistema clínico...`);
-                    
+                if (chatStep === 'booking_name') {
+                    tempUserData.name = text;
+                    addBotMessage(`Prazer em te conhecer, ${text.split(' ')[0]}! Qual seria o seu **WhatsApp**?`);
+                    chatStep = 'booking_phone';
+                } else if (chatStep === 'booking_phone') {
+                    tempUserData.phone = text;
+                    addBotMessage("Certo. Qual **data e horário** seriam ideais para sua consulta?");
+                    chatStep = 'booking_time_check';
+                } else if (chatStep === 'booking_time_check') {
+                    addBotMessage(`<i class="fas fa-microchip fa-spin mr-2"></i> Rastreando disponibilidade no sistema...`);
                     setTimeout(() => {
-                        // Verifica se o texto contém algum dos horários mockados
                         const isOccupied = occupiedSlots.some(slot => text.includes(slot));
-                        
                         if (isOccupied) {
-                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Sistema informa: **Horário Ocupado**.`);
-                            addBotMessage(`Infelizmente a vaga para **${text}** já foi preenchida.`);
-                            addBotMessage("Por favor, digite outro horário para que eu possa rastrear novamente:");
-                            chatStep = 'waiting_hour_check';
+                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> O horário das **${text}** está ocupado.`);
+                            addBotMessage("Por favor, sugira outro horário para que eu possa rastrear novamente:");
                         } else {
-                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Localizada!**`);
-                            addBotMessage(`O horário das **${text}** está disponível no sistema.`);
-                            addBotMessage("Deseja confirmar sua reserva agora?");
-                            showOptions([{ text: "Confirmar Reserva", action: "finalize_booking" }]);
                             tempUserData.preferred_hour = text;
+                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Localizada!**`);
+                            addBotMessage(`O horário das **${text}** está vago. Deseja finalizar o agendamento?`);
+                            showOptions([{ text: "Finalizar agora", action: "finalize_booking" }]);
                         }
                     }, 2000);
-                } else if (chatStep === 'waiting_action') {
-                    handleAction(text);
+                } else if (chatStep === 'waiting_hour_check') {
+                    // Re-usa lógica de rastreio
+                    chatStep = 'booking_time_check';
+                    sendChatMessageMock(text); 
+                } else if (chatStep === 'free_text') {
+                    handleNaturalLanguage(text);
+                } else if (chatStep === 'finalize_booking' || text.toLowerCase().includes('finalizar')) {
+                    finalizeAndSend();
                 } else {
                     addBotMessage("Entendi. Gostaria de falar com a Lavínia agora?");
                     showOptions([{ text: "Sim, chamar no WhatsApp", action: "direct_wa" }]);
@@ -450,13 +512,49 @@
             }, 800);
         }
 
+        function sendChatMessageMock(text) {
+            chatInput.value = text;
+            sendChatMessage();
+        }
+
+        function handleNaturalLanguage(text) {
+            const lowText = text.toLowerCase();
+            if (lowText.includes('preço') || lowText.includes('valor')) {
+                addBotMessage("Os valores variam conforme o tratamento (podologia clínica, laser, etc). Gostaria de agendar uma avaliação para um orçamento preciso?");
+            } else if (lowText.includes('local') || lowText.includes('onde')) {
+                addBotMessage("Estamos localizados na Av. Principal, 1234 - Sala 50 - Centro.");
+            } else if (lowText.includes('horário') || lowText.includes('vaga') || lowText.includes('agendar')) {
+                handleAction('start_booking');
+                return;
+            } else {
+                addBotMessage("Pode me dar mais detalhes? Ou se preferir, posso te transferir para a Lavínia no WhatsApp.");
+            }
+            showOptions([
+                { text: "Desejo agendar", action: "start_booking" },
+                { text: "Falar no WhatsApp", action: "direct_wa" }
+            ]);
+        }
+
         function startAgendamentoChat() {
             modal.classList.add('hidden');
             if (!isChatOpen) toggleChat();
             chatMessages.innerHTML = '';
-            addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro.`);
-            addBotMessage("Qual o **horário** que você deseja verificar se está vago?");
-            chatStep = 'waiting_hour_check';
+            addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro no site.`);
+            addBotMessage(`Rastreei seu horário das **${tempUserData.time}** no dia **${tempUserData.date}**.`);
+            
+            setTimeout(() => {
+                const isOccupied = occupiedSlots.some(slot => tempUserData.time.includes(slot));
+                if (isOccupied) {
+                    addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Infelizmente o horário das **${tempUserData.time}** acabou de ser preenchido.`);
+                    addBotMessage("Pode me dizer outro horário que ficaria bom para você?");
+                    chatStep = 'booking_time_check';
+                } else {
+                    addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Confirmada!**`);
+                    addBotMessage("Deseja finalizar sua reserva agora para garantir o horário?");
+                    tempUserData.preferred_hour = tempUserData.time;
+                    showOptions([{ text: "Finalizar Reserva", action: "finalize_booking" }]);
+                }
+            }, 1500);
         }
 
         function finalizeAndSend() {
