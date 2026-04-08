@@ -309,14 +309,8 @@
                 <i class="fas fa-check"></i>
             </div>
             <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Cadastro Iniciado!</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-4">Recebemos seus dados preliminares.</p>
-            <div class="bg-slate-50 p-4 rounded-2xl mb-8 border border-slate-100">
-                <p class="text-[10px] font-bold text-emerald-800 uppercase tracking-widest mb-2">Conectar com Tua Agenda</p>
-                <a href="https://tuaagenda.com/lavinia-podologia" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline flex items-center justify-center gap-2">
-                    Abrir App Tua Agenda <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-            <button onclick="startAgendamentoChat()" class="btn-primary w-full">Verificar Horários no Chat</button>
+            <p class="text-slate-500 text-sm leading-relaxed mb-8">Recebemos seus dados preliminares. Nosso sistema está pronto para verificar sua vaga.</p>
+            <button onclick="startAgendamentoChat()" class="btn-primary w-full italic">Verificar Vaga no Sistema</button>
         </div>
     </div>
 
@@ -350,9 +344,9 @@
             isChatOpen = !isChatOpen;
             chatWindow.style.display = isChatOpen ? 'flex' : 'none';
             if (isChatOpen && chatMessages.children.length === 0) {
-                addBotMessage("Olá! Sou o assistente da Lavínia. Como posso te ajudar hoje?");
+                addBotMessage("Olá! Sou o assistente inteligente da Lavínia. Como posso te ajudar hoje?");
                 showOptions([
-                    { text: "Verificar horário vago", action: "check_hours" },
+                    { text: "Verificar vaga no sistema", action: "check_hours" },
                     { text: "Dúvidas sobre tratamentos", action: "doubts" },
                     { text: "Falar com a Lavínia", action: "direct_wa" }
                 ]);
@@ -400,11 +394,8 @@
         function handleAction(action) {
             setTimeout(() => {
                 if (action === 'check_hours') {
-                    addBotMessage("Para qual **dia e horário** você gostaria de verificar a disponibilidade?");
+                    addBotMessage("Para qual **dia e horário** você gostaria de rastrear uma vaga no sistema?");
                     chatStep = 'waiting_hour_check';
-                } else if (action === 'direct_tuaagenda') {
-                    addBotMessage("Abrindo o seu calendário no Tua Agenda...");
-                    window.open('https://tuaagenda.com/lavinia-podologia', '_blank');
                 } else if (action === 'doubts') {
                     addBotMessage("Qual sua dúvida principal? Pode digitar ou escolher uma opção:");
                     showOptions([
@@ -415,8 +406,8 @@
                     addBotMessage("Encaminhando para o WhatsApp da Lavínia...");
                     window.open('https://wa.me/5511999999999', '_blank');
                 } else if (action === 'doubt_price') {
-                    addBotMessage("Nossos valores variam conforme o tratamento. Gostaria de agendar uma avaliação inicial?");
-                    showOptions([{ text: "Sim, agendar", action: "check_hours" }]);
+                    addBotMessage("Nossos valores variam conforme o tratamento. Gostaria de rastrear uma vaga?");
+                    showOptions([{ text: "Sim, rastrear vaga", action: "check_hours" }]);
                 } else if (action === 'doubt_loc') {
                     addBotMessage("Estamos na Av. Principal, 1234 - Sala 50 - Centro.");
                 }
@@ -431,26 +422,25 @@
 
             setTimeout(() => {
                 if (chatStep === 'waiting_hour_check') {
-                    addBotMessage(`<i class="fas fa-spinner fa-spin mr-2"></i> Verificando disponibilidade para **${text}** no Tua Agenda...`);
+                    addBotMessage(`<i class="fas fa-microchip fa-spin mr-2"></i> Rastreando vaga para **${text}** no sistema clínico...`);
                     
                     setTimeout(() => {
                         // Verifica se o texto contém algum dos horários mockados
                         const isOccupied = occupiedSlots.some(slot => text.includes(slot));
                         
                         if (isOccupied) {
-                            addBotMessage(`<i class="fas fa-exclamation-circle text-amber-500 mr-2"></i> Sinto muito, o horário das **${text}** já está preenchido.`);
-                            addBotMessage("Gostaria de tentar outro horário ou ver os horários disponíveis no app?");
-                            showOptions([
-                                { text: "Tentar outro horário", action: "check_hours" },
-                                { text: "Ver disponibilidade no Tua Agenda", action: "direct_tuaagenda" }
-                            ]);
+                            addBotMessage(`<i class="fas fa-times-circle text-red-500 mr-2"></i> Sistema informa: **Horário Ocupado**.`);
+                            addBotMessage(`Infelizmente a vaga para **${text}** já foi preenchida.`);
+                            addBotMessage("Por favor, digite outro horário para que eu possa rastrear novamente:");
+                            chatStep = 'waiting_hour_check';
                         } else {
-                            addBotMessage(`<i class="fas fa-check-circle text-emerald-500 mr-2"></i> Ótima notícia! O horário das **${text}** está livre.`);
-                            addBotMessage("Deseja confirmar seu cadastro com este horário?");
-                            showOptions([{ text: "Confirmar agora", action: "finalize_booking" }]);
+                            addBotMessage(`<i class="fas fa-check-double text-emerald-500 mr-2"></i> **Vaga Localizada!**`);
+                            addBotMessage(`O horário das **${text}** está disponível no sistema.`);
+                            addBotMessage("Deseja confirmar sua reserva agora?");
+                            showOptions([{ text: "Confirmar Reserva", action: "finalize_booking" }]);
                             tempUserData.preferred_hour = text;
                         }
-                    }, 1500);
+                    }, 2000);
                 } else if (chatStep === 'waiting_action') {
                     handleAction(text);
                 } else {
