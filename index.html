@@ -91,18 +91,114 @@
             right: 30px;
             background-color: #25d366;
             color: white;
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 100;
         }
         .whatsapp-bubble:hover {
             transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Chatbot Styles */
+        #chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-width: 90vw;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 101;
+            border: 1px solid #f1f5f9;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8fafc;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .bot-msg {
+            background: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .user-msg {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .chat-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .option-btn {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -132,23 +228,26 @@
             <form id="registrationForm" class="space-y-6">
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Nome Completo</label>
-                    <input type="text" class="form-input" placeholder="Ex: Maria Oliveira" required>
+                    <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">WhatsApp</label>
-                        <input type="tel" class="form-input" placeholder="(00) 00000-0000" required>
+                        <input type="tel" id="formPhone" class="form-input" placeholder="(00) 00000-0000" required>
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Data Desejada</label>
-                        <input type="date" class="form-input" required>
+                        <input type="date" id="formDate" class="form-input" required>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Principal Queixa</label>
-                    <select class="form-input appearance-none">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1 flex justify-between">
+                        <span>Principal Queixa</span>
+                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat('check_hours')">Verificar horário vago?</span>
+                    </label>
+                    <select id="formComplaint" class="form-input appearance-none">
                         <option value="">Selecione uma opção...</option>
                         <option value="unha">Unhas Encravadas</option>
                         <option value="calos">Calos e Calosidades</option>
@@ -179,36 +278,183 @@
         &copy; 2026 Lavínia Podologia. Todos os direitos reservados.
     </footer>
 
-    <!-- WhatsApp Quick Link -->
-    <a href="https://wa.me/5511999999999" class="whatsapp-bubble" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <!-- Chatbot Toggle -->
+    <div class="whatsapp-bubble" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </div>
 
-    <!-- Success Modal (Hidden) -->
+    <!-- Chatbot Window -->
+    <div id="chatbot-window">
+        <div class="chat-header">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-robot"></i>
+                <span class="font-bold text-sm">Assistente Lavínia</span>
+            </div>
+            <i class="fas fa-times cursor-pointer opacity-70 hover:opacity-100" onclick="toggleChat()"></i>
+        </div>
+        <div id="chatMessages" class="chat-messages">
+            <!-- Messages injected here -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Digite aqui...">
+            <button onclick="sendChatMessage()" class="text-emerald-700"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
     <div id="successModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-emerald-950/40 backdrop-blur-sm"></div>
         <div class="relative bg-white p-12 rounded-[3rem] shadow-2xl text-center max-w-sm w-full animate__animated animate__zoomIn">
             <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
                 <i class="fas fa-check"></i>
             </div>
-            <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Quase lá!</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-8">Recebemos seus dados. Lavínia entrará em contato em instantes via WhatsApp para confirmar seu horário.</p>
-            <button onclick="closeModal()" class="btn-primary w-full">Entendido</button>
+            <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Cadastro Iniciado!</h3>
+            <p class="text-slate-500 text-sm leading-relaxed mb-8">Agora, finalize o agendamento no nosso Chatbot para verificarmos o horário.</p>
+            <button onclick="startAgendamentoChat()" class="btn-primary w-full">Ir para o Chat</button>
         </div>
     </div>
 
     <script>
         const form = document.getElementById('registrationForm');
         const modal = document.getElementById('successModal');
+        const chatWindow = document.getElementById('chatbot-window');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
 
+        let isChatOpen = false;
+        let chatStep = 'greeting';
+        let tempUserData = {};
+
+        // Form Submission
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            tempUserData = {
+                name: document.getElementById('formName').value,
+                phone: document.getElementById('formPhone').value,
+                date: document.getElementById('formDate').value,
+                complaint: document.getElementById('formComplaint').value
+            };
             modal.classList.remove('hidden');
-            form.reset();
         });
 
-        function closeModal() {
+        function toggleChat() {
+            isChatOpen = !isChatOpen;
+            chatWindow.style.display = isChatOpen ? 'flex' : 'none';
+            if (isChatOpen && chatMessages.children.length === 0) {
+                addBotMessage("Olá! Sou o assistente da Lavínia. Como posso te ajudar hoje?");
+                showOptions([
+                    { text: "Verificar horário vago", action: "check_hours" },
+                    { text: "Dúvidas sobre tratamentos", action: "doubts" },
+                    { text: "Falar com a Lavínia", action: "direct_wa" }
+                ]);
+            }
+        }
+
+        function openChat(action) {
+            if (!isChatOpen) toggleChat();
+            handleAction(action);
+        }
+
+        function addBotMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message bot-msg animate__animated animate__fadeIn';
+            div.innerHTML = text;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message user-msg animate__animated animate__fadeIn';
+            div.innerHTML = text;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showOptions(options) {
+            const div = document.createElement('div');
+            div.className = 'chat-options';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => {
+                    addUserMessage(opt.text);
+                    handleAction(opt.action);
+                };
+                div.appendChild(btn);
+            });
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleAction(action) {
+            setTimeout(() => {
+                if (action === 'check_hours') {
+                    addBotMessage("Para qual **dia e horário** você gostaria de verificar a disponibilidade?");
+                    chatStep = 'waiting_hour_check';
+                } else if (action === 'doubts') {
+                    addBotMessage("Qual sua dúvida principal? Pode digitar ou escolher uma opção:");
+                    showOptions([
+                        { text: "Preço das consultas", action: "doubt_price" },
+                        { text: "Localização", action: "doubt_loc" }
+                    ]);
+                } else if (action === 'direct_wa') {
+                    addBotMessage("Encaminhando para o WhatsApp da Lavínia...");
+                    window.open('https://wa.me/5511999999999', '_blank');
+                } else if (action === 'doubt_price') {
+                    addBotMessage("Nossos valores variam conforme o tratamento. Gostaria de agendar uma avaliação inicial?");
+                    showOptions([{ text: "Sim, agendar", action: "check_hours" }]);
+                } else if (action === 'doubt_loc') {
+                    addBotMessage("Estamos na Av. Principal, 1234 - Sala 50 - Centro.");
+                }
+            }, 500);
+        }
+
+        function sendChatMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addUserMessage(text);
+            chatInput.value = '';
+
+            setTimeout(() => {
+                if (chatStep === 'waiting_hour_check') {
+                    addBotMessage(`Vou verificar se o horário **${text}** está vago...`);
+                    setTimeout(() => {
+                        addBotMessage("Tenho esse horário disponível! Deseja confirmar seu cadastro?");
+                        showOptions([{ text: "Confirmar agora", action: "finalize_booking" }]);
+                        tempUserData.preferred_hour = text;
+                    }, 1500);
+                } else if (action === 'finalize_booking') {
+                    finalizeAndSend(text);
+                } else {
+                    addBotMessage("Entendi. Gostaria de falar com a Lavínia agora?");
+                    showOptions([{ text: "Sim, chamar no WhatsApp", action: "direct_wa" }]);
+                }
+            }, 800);
+        }
+
+        function startAgendamentoChat() {
             modal.classList.add('hidden');
+            if (!isChatOpen) toggleChat();
+            chatMessages.innerHTML = '';
+            addBotMessage(`Olá ${tempUserData.name.split(' ')[0]}! Vi que você preencheu o cadastro.`);
+            addBotMessage("Qual o **horário** que você deseja verificar se está vago?");
+            chatStep = 'waiting_hour_check';
+        }
+
+        function finalizeAndSend() {
+            const message = `Olá Lavínia! Novo cadastro de cliente:%0A%0A` +
+                `*Nome:* ${tempUserData.name}%0A` +
+                `*WhatsApp:* ${tempUserData.phone}%0A` +
+                `*Data:* ${tempUserData.date}%0A` +
+                `*Horário:* ${tempUserData.preferred_hour || 'A combinar'}%0A` +
+                `*Queixa:* ${tempUserData.complaint}`;
+            
+            addBotMessage("Tudo pronto! Estou te enviando para o WhatsApp da Lavínia para confirmar.");
+            setTimeout(() => {
+                window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+            }, 1500);
         }
 
         // Clinic Status Simple Logic
