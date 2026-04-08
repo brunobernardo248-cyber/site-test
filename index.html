@@ -333,8 +333,10 @@
         const chatInput = document.getElementById('chatInput');
 
         let isChatOpen = false;
-        let chatStep = 'greeting';
+        let chatStep = 'waiting_doubt';
         let tempUserData = {};
+        let pendingMessages = [];
+        let sendTimer = null;
 
         // Form Submission
         form.addEventListener('submit', (e) => {
@@ -364,7 +366,7 @@
             modal.classList.remove('hidden');
             
             // Simula o envio "invisível" nos logs
-            console.log("Notificação enviada para Lavínia:", tempUserData);
+            console.log("Notificação enviada para Lavínia (32 99903-6230):", tempUserData);
         });
 
         const chatSendBtn = document.getElementById('chatSendBtn');
@@ -387,6 +389,8 @@
                 chatMessages.innerHTML = '';
                 chatStep = 'waiting_doubt';
                 chatInput.value = '';
+                pendingMessages = [];
+                if (sendTimer) clearTimeout(sendTimer);
             }
         }
 
@@ -415,25 +419,36 @@
         function sendChatMessage() {
             const text = chatInput.value.trim();
             if (!text) return;
+            
             addUserMessage(text);
+            pendingMessages.push(text);
             chatInput.value = '';
 
-            setTimeout(() => {
+            // Limpa o temporizador anterior para "esperar" o cliente terminar de escrever
+            if (sendTimer) clearTimeout(sendTimer);
+
+            // Aguarda 4 segundos de silêncio para assumir que o cliente terminou
+            sendTimer = setTimeout(() => {
                 const sendingMsg = addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando sua dúvida para a Lavínia...");
                 
-                // Simulação de envio invisível para o WhatsApp da Lavínia
-                console.log("Dúvida enviada para o WhatsApp da Lavínia:", text);
+                // Simulação de envio invisível (agrupando tudo o que foi escrito)
+                const fullMessage = pendingMessages.join("\n");
+                console.log("Dúvida completa enviada para Lavínia (32 99903-6230):", fullMessage);
                 
+                // Limpa a lista de mensagens pendentes após o envio
+                pendingMessages = [];
+
                 setTimeout(() => {
                     if (sendingMsg) sendingMsg.remove();
                     addBotMessage("Sua mensagem foi entregue com sucesso! ✅");
                     addBotMessage("A Lavínia recebeu sua dúvida e entrará em contato com você em breve.");
                 }, 2000);
-            }, 800);
+            }, 4000); 
         }
 
         function closeModal() {
             modal.classList.add('hidden');
+            form.reset();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
