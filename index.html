@@ -311,13 +311,17 @@
     <!-- Success Modal -->
     <div id="successModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-emerald-950/40 backdrop-blur-sm"></div>
-        <div class="relative bg-white p-12 rounded-[3rem] shadow-2xl text-center max-w-sm w-full animate__animated animate__zoomIn">
-            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">
+        <div class="relative bg-white p-10 lg:p-16 rounded-[3rem] shadow-2xl text-center max-w-sm w-full animate__animated animate__zoomIn">
+            <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 text-2xl shadow-inner">
                 <i class="fas fa-check"></i>
             </div>
-            <h3 class="text-2xl font-bold text-emerald-950 mb-4 italic">Dados Recebidos!</h3>
-            <p class="text-slate-500 text-sm leading-relaxed mb-8">Agora, clique abaixo para enviar seu pedido de agendamento para a Lavínia verificar a vaga.</p>
-            <button onclick="finalizeAndSend()" class="btn-primary w-full italic">Enviar para Lavínia</button>
+            <h3 class="text-xl font-bold text-emerald-950 mb-3 italic">Dados Recebidos!</h3>
+            <p id="modalMessage" class="text-slate-500 text-xs font-medium leading-relaxed mb-10">Lavínia foi notificada e entrará em contato com você em breve.</p>
+            
+            <button onclick="closeModal()" class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto group">
+                <i class="fas fa-arrow-left text-[8px] group-hover:-translate-x-1 transition-transform"></i>
+                Voltar ao Início
+            </button>
         </div>
     </div>
 
@@ -335,15 +339,33 @@
         // Form Submission
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Validação de horário extra via JS (até 20:00)
+            const timeInput = document.getElementById('formTime');
+            const selectedTime = timeInput.value;
+            if (selectedTime > "20:00") {
+                alert("Por favor, selecione um horário até as 20:00.");
+                timeInput.value = "20:00";
+                return;
+            }
+
             tempUserData = {
                 name: document.getElementById('formName').value,
                 phone: document.getElementById('formPhone').value,
                 date: document.getElementById('formDate').value,
-                time: document.getElementById('formTime').value,
+                time: selectedTime,
                 complaint: document.getElementById('formComplaint').value
             };
+            
+            // Garante que o chat esteja fechado ao mostrar a mensagem de sucesso
+            isChatOpen = true; // Força toggleChat a fechar
+            toggleChat(); 
+            
             modal.classList.remove('hidden');
             
+            // Simula o envio "invisível" nos logs
+            console.log("Notificação enviada para Lavínia:", tempUserData);
+
             // Fecha o modal automaticamente após 3 segundos
             setTimeout(() => {
                 closeModal();
@@ -528,38 +550,21 @@
 
         function finalizeAndSend() {
             const message = `Olá Lavínia! Novo cadastro de cliente:%0A%0A` +
-                `*Nome:* ${tempUserData.name}%0A` +
-                `*WhatsApp:* ${tempUserData.phone}%0A` +
-                `*Data:* ${tempUserData.date}%0A` +
-                `*Horário:* ${tempUserData.preferred_hour || 'A combinar'}%0A` +
-                `*Queixa:* ${tempUserData.complaint}`;
+                `Nome: ${tempUserData.name}%0A` +
+                `WhatsApp: ${tempUserData.phone}%0A` +
+                `Data: ${tempUserData.date}%0A` +
+                `Horário: ${tempUserData.preferred_hour || tempUserData.time || 'A combinar'}%0A` +
+                `Queixa: ${tempUserData.complaint}`;
             
-            // Simulação de envio "invisível" para Lavínia
-            // Em um sistema real, isso chamaria uma API/Webhook. 
-            // Para o cliente, apenas mostramos o sucesso e fechamos o chat/modal.
-            
-            if (modal.style.display !== 'none') {
-                const modalBtn = modal.querySelector('button');
-                const modalText = modal.querySelector('p');
-                modalBtn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Enviando...";
-                modalBtn.disabled = true;
-                
-                setTimeout(() => {
-                    modalText.innerHTML = "Notificação enviada com sucesso para a Lavínia! ✅";
-                    modalBtn.innerHTML = "Finalizado";
-                    setTimeout(() => closeModal(), 2000);
-                }, 2000);
-            } else {
-                addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando notificação interna para Lavínia...");
-                setTimeout(() => {
-                    addBotMessage("Lavínia foi notificada com sucesso sobre o seu pedido! ✅");
-                    addBotMessage("Ela entrará em contato com você em instantes.");
-                    setTimeout(() => toggleChat(), 3000);
-                }, 2000);
-            }
-            
-            // Log para simular o que seria enviado via API
-            console.log("Dados enviados para Lavínia:", message);
+            // Notificação interna invisível (Simulada via console/log)
+            console.log("Notificação enviada para Lavínia via sistema interno:", message);
+
+            addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando notificação interna para Lavínia...");
+            setTimeout(() => {
+                addBotMessage("Lavínia foi notificada com sucesso sobre o seu pedido! ✅");
+                addBotMessage("Ela entrará em contato com você em instantes.");
+                setTimeout(() => toggleChat(), 3000);
+            }, 2000);
         }
 
         // Clinic Status Simple Logic
