@@ -1,256 +1,816 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Podóloga Lavínia Silva</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavínia - Podologia Clínica de Alta Performance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary: #065f46; /* emerald-800 */
+            --primary-light: #10b981; /* emerald-500 */
+            --accent: #d97706; /* amber-600 */
+            --slate-bg: #f8fafc;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            background-color: var(--slate-bg);
+        }
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        /* Floating Buttons */
+        .float-btn {
+            position: fixed;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .whatsapp-float {
+            bottom: 100px;
+            right: 25px;
+            background-color: #25d366;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .chatbot-float {
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--primary);
+            color: white;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+        }
+        .back-to-top {
+            bottom: 25px;
+            left: 25px;
+            background-color: white;
+            color: var(--primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            opacity: 0;
+            visibility: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .float-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+        /* Hero Styling */
+        .hero-bg {
+            background-image: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1519415510236-8559119946b7?auto=format&fit=crop&q=80&w=1920');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-body{
-background:#f1f5f4;
-color:#333;
-}
+        /* Chatbot Advanced Window */
+        #chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 380px;
+            max-width: 90vw;
+            height: 550px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            z-index: 101;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fdfdfd;
+        }
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid #f1f5f9;
+            background: white;
+        }
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            max-width: 85%;
+            line-height: 1.6;
+            position: relative;
+        }
+        .chat-bot {
+            background: #f1f5f9;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .chat-btn {
+            background: white;
+            color: var(--primary);
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-btn:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+            transform: translateX(5px);
+        }
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
 
-/* HERO PREMIUM */
-header{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-color:white;
-
-background:
-linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-url('https://images.unsplash.com/photo-1556228720-195a672e8a03');
-background-size:cover;
-background-position:center;
-}
-
-header h1{
-font-size:48px;
-font-weight:600;
-}
-
-header p{
-margin:20px 0;
-font-size:18px;
-max-width:500px;
-}
-
-.btn{
-background:#52b788;
-padding:14px 28px;
-border-radius:30px;
-color:white;
-text-decoration:none;
-transition:0.3s;
-}
-.btn:hover{background:#40916c;}
-
-/* SECTIONS */
-section{
-padding:80px 20px;
-max-width:1100px;
-margin:auto;
-}
-
-h2{
-text-align:center;
-margin-bottom:40px;
-color:#1b4332;
-}
-
-/* SOBRE */
-.sobre{
-text-align:center;
-max-width:700px;
-margin:auto;
-font-size:16px;
-}
-
-/* SERVIÇOS */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:25px;
-}
-
-.card{
-background:rgba(255,255,255,0.7);
-backdrop-filter:blur(10px);
-padding:25px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-8px);
-}
-
-/* DEPOIMENTOS */
-.depo{
-font-style:italic;
-}
-
-/* FORM */
-form{
-background:white;
-padding:30px;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-
-form input, form select{
-width:100%;
-padding:14px;
-margin:10px 0;
-border-radius:10px;
-border:1px solid #ddd;
-}
-
-button{
-background:#1b4332;
-color:white;
-padding:14px;
-border:none;
-border-radius:10px;
-width:100%;
-font-size:16px;
-cursor:pointer;
-}
-
-button:hover{background:#081c15;}
-
-.success{
-display:none;
-margin-top:15px;
-background:#d8f3dc;
-padding:15px;
-border-radius:10px;
-text-align:center;
-}
-
-/* CONTATO */
-.contato{
-text-align:center;
-}
-
-/* FOOTER */
-footer{
-background:#081c15;
-color:white;
-text-align:center;
-padding:20px;
-}
-
-/* WHATSAPP */
-.whatsapp{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25d366;
-padding:16px;
-border-radius:50%;
-color:white;
-font-size:22px;
-text-decoration:none;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
-</style>
+        /* Professional Layout Elements */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-title-underline {
+            width: 60px;
+            height: 4px;
+            background: var(--primary-light);
+            border-radius: 2px;
+            margin: 1.5rem auto;
+        }
+        
+        /* Hour verification styling */
+        .hour-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .hour-open { background: #dcfce7; color: #166534; }
+        .hour-closed { background: #fee2e2; color: #991b1b; }
+    </style>
 </head>
+<body class="text-slate-900">
 
-<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-500 py-6">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="glass-card rounded-2xl px-6 py-4 flex justify-between items-center shadow-lg border-white/40">
+                <div class="flex items-center group cursor-pointer">
+                    <div class="w-12 h-12 bg-emerald-800 rounded-xl flex items-center justify-center text-white shadow-inner group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-shoe-prints text-xl rotate-45"></i>
+                    </div>
+                    <div class="ml-4">
+                        <span class="block text-emerald-900 font-bold text-xl tracking-tighter leading-none">Lavínia</span>
+                        <span class="block text-slate-400 text-[10px] uppercase tracking-[0.2em] font-bold">Podologia Clínica</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="#inicio" class="text-slate-600 hover:text-emerald-800 font-semibold text-sm tracking-wide transition">Início</a>
+                    <a href="#servicos" class="text-slate-600 hover:text-emerald-800 font-semibold text-sm tracking-wide transition">Especialidades</a>
+                    <a href="#sobre" class="text-slate-600 hover:text-emerald-800 font-semibold text-sm tracking-wide transition">Sobre</a>
+                    <a href="#contato" class="bg-emerald-800 text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-emerald-900 transition shadow-lg shadow-emerald-900/20">Agendar Agora</a>
+                </div>
+                
+                <button id="mobile-menu-btn" class="md:hidden text-emerald-900 text-2xl"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
 
-<header>
-<h1>Lavínia Silva</h1>
-<p>Especialista em podologia clínica, cuidando da saúde e bem-estar dos seus pés com excelência.</p>
-<a href="#agendamento" class="btn">Agendar Consulta</a>
-</header>
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-bg min-h-screen flex items-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/50"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10">
+            <div class="lg:max-w-4xl animate__animated animate__fadeInLeft">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="h-px w-12 bg-emerald-400"></span>
+                    <span class="text-emerald-400 font-bold text-sm tracking-[0.3em] uppercase">Excelência em Podologia</span>
+                </div>
+                <h1 class="text-6xl lg:text-9xl font-bold text-white leading-[0.9] mb-8 italic">
+                    Saúde que <br>
+                    <span class="text-emerald-400 font-serif not-italic">sustenta você.</span>
+                </h1>
+                <p class="text-xl text-slate-200 mb-12 max-w-xl leading-relaxed font-light">
+                    Tratamentos clínicos de alta performance para quem busca alívio imediato e prevenção especializada com o mais alto rigor técnico.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <button onclick="openChatWithAction('agendar')" class="px-12 py-5 bg-white text-emerald-900 rounded-2xl font-bold text-lg hover:bg-emerald-50 transition shadow-2xl flex items-center justify-center gap-4 group">
+                        Agendar Avaliação
+                        <i class="fas fa-calendar-check group-hover:scale-110 transition"></i>
+                    </button>
+                    <a href="#servicos" class="px-12 py-5 bg-emerald-800/20 backdrop-blur-md border border-white/10 text-white rounded-2xl font-bold text-lg hover:bg-emerald-800/40 transition flex items-center justify-center">
+                        Nossas Técnicas
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status de Funcionamento flutuante -->
+        <div class="absolute bottom-12 right-12 hidden lg:block animate__animated animate__fadeInRight animate__delay-1s">
+            <div class="glass-card p-6 rounded-3xl border-white/20 shadow-2xl">
+                <div class="flex items-center gap-4 mb-2">
+                    <div id="status-dot" class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span id="status-text" class="text-sm font-bold text-emerald-900 tracking-wide uppercase">Atendimento Aberto</span>
+                </div>
+                <p class="text-xs text-slate-500 font-medium">Horário atual: <span id="current-time" class="text-emerald-800">--:--</span></p>
+            </div>
+        </div>
+    </section>
 
-<section>
-<h2>Sobre Mim</h2>
-<p class="sobre">
-Sou podóloga especializada em tratamentos clínicos dos pés, oferecendo atendimento seguro, higiênico e personalizado em Descoberto - MG. Meu compromisso é proporcionar conforto, saúde e qualidade de vida para cada cliente.
-</p>
-</section>
+    <!-- Stats Section -->
+    <section class="py-20 bg-white relative z-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="reveal group text-center md:text-left">
+                    <div class="text-5xl font-bold text-emerald-900 mb-2 font-serif group-hover:text-emerald-600 transition tracking-tighter italic">5k+</div>
+                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">Procedimentos</p>
+                </div>
+                <div class="reveal group text-center md:text-left" style="transition-delay: 0.1s;">
+                    <div class="text-5xl font-bold text-emerald-900 mb-2 font-serif group-hover:text-emerald-600 transition tracking-tighter italic">100%</div>
+                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">Esterilização</p>
+                </div>
+                <div class="reveal group text-center md:text-left" style="transition-delay: 0.2s;">
+                    <div class="text-5xl font-bold text-emerald-900 mb-2 font-serif group-hover:text-emerald-600 transition tracking-tighter italic">12</div>
+                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">Especialidades</p>
+                </div>
+                <div class="reveal group text-center md:text-left" style="transition-delay: 0.3s;">
+                    <div class="text-5xl font-bold text-emerald-900 mb-2 font-serif group-hover:text-emerald-600 transition tracking-tighter italic">4.9</div>
+                    <p class="text-sm text-slate-400 font-bold uppercase tracking-widest">Google Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section>
-<h2>Tratamentos</h2>
-<div class="grid">
-<div class="card">Unha inflamada</div>
-<div class="card">Unha encravada</div>
-<div class="card">Calos e calosidades</div>
-<div class="card">Rachaduras e fissuras</div>
-<div class="card">Órtese corretiva</div>
-</div>
-</section>
+    <!-- Por que cuidar? -->
+    <section class="py-32 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-24 reveal">
+                <span class="text-emerald-600 font-bold text-sm tracking-[0.4em] uppercase mb-4 block">Diferenciais Clínicos</span>
+                <h2 class="text-4xl lg:text-6xl font-bold text-emerald-950 mb-6 italic">Por que escolher a nossa clínica?</h2>
+                <div class="section-title-underline"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <div class="bg-white p-12 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 reveal group">
+                    <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-700 mb-10 group-hover:bg-emerald-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-microscope text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-emerald-900">Tecnologia Laser</h3>
+                    <p class="text-slate-500 leading-relaxed text-lg">Utilizamos laserterapia de baixa intensidade para aceleração cicatricial e combate a onicomicoses persistentes.</p>
+                </div>
+                <div class="bg-white p-12 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 reveal group" style="transition-delay: 0.1s;">
+                    <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-700 mb-10 group-hover:bg-emerald-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-hand-holding-medical text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-emerald-900">Biossegurança</h3>
+                    <p class="text-slate-500 leading-relaxed text-lg">Rigoroso protocolo de esterilização em autoclave hospitalar, garantindo risco zero de contaminação cruzada.</p>
+                </div>
+                <div class="bg-white p-12 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-500 reveal group" style="transition-delay: 0.2s;">
+                    <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-700 mb-10 group-hover:bg-emerald-800 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-md text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-6 text-emerald-900">Visão Clínica</h3>
+                    <p class="text-slate-500 leading-relaxed text-lg">Abordagem multidisciplinar focada no diagnóstico preciso de patologias dos pés e suas repercussões posturais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section>
-<h2>Depoimentos</h2>
-<div class="grid">
-<div class="card depo">“Atendimento impecável, super profissional!”</div>
-<div class="card depo">“Ambiente limpo e atendimento excelente.”</div>
-<div class="card depo">“Melhor podóloga da região!”</div>
-</div>
-</section>
+    <!-- Serviços Section -->
+    <section id="servicos" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-24 reveal">
+                <div class="lg:w-1/2">
+                    <span class="text-emerald-600 font-bold text-sm tracking-[0.4em] uppercase mb-4 block text-center lg:text-left">Procedimentos</span>
+                    <h2 class="text-4xl lg:text-6xl font-bold text-emerald-950 italic text-center lg:text-left">Tratamentos de Alta Complexidade.</h2>
+                </div>
+                <div class="flex gap-4 mt-8 lg:mt-0">
+                    <button class="w-16 h-16 rounded-full border-2 border-slate-100 flex items-center justify-center text-slate-300 hover:border-emerald-800 hover:text-emerald-800 transition-all duration-300"><i class="fas fa-arrow-left"></i></button>
+                    <button class="w-16 h-16 rounded-full border-2 border-slate-100 flex items-center justify-center text-slate-300 hover:border-emerald-800 hover:text-emerald-800 transition-all duration-300"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Serviço 1 -->
+                <div class="group relative overflow-hidden rounded-[3rem] aspect-[3/4] shadow-2xl reveal">
+                    <img src="https://images.unsplash.com/photo-1519415510236-8559119946b7?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt="Unha Encravada">
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/40 to-transparent"></div>
+                    <div class="absolute bottom-0 p-10">
+                        <h3 class="text-3xl font-bold text-white mb-4 italic font-serif leading-none">Onicocriptose</h3>
+                        <p class="text-emerald-100/80 text-sm font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">Tratamento indolor para unhas encravadas com técnica de espícula.</p>
+                        <button onclick="openChatWithAction('duvida_unha')" class="text-white font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-1">Consultar Técnica</button>
+                    </div>
+                </div>
+                <!-- Serviço 2 -->
+                <div class="group relative overflow-hidden rounded-[3rem] aspect-[3/4] shadow-2xl reveal" style="transition-delay: 0.1s;">
+                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt="Calosidades">
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/40 to-transparent"></div>
+                    <div class="absolute bottom-0 p-10">
+                        <h3 class="text-3xl font-bold text-white mb-4 italic font-serif leading-none">Calosidades</h3>
+                        <p class="text-emerald-100/80 text-sm font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">Desbastamento profissional e tratamento de hiperqueratose.</p>
+                        <button onclick="openChatWithAction('duvida_calos')" class="text-white font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-1">Consultar Técnica</button>
+                    </div>
+                </div>
+                <!-- Serviço 3 -->
+                <div class="group relative overflow-hidden rounded-[3rem] aspect-[3/4] shadow-2xl reveal" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt="Pé Diabético">
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/40 to-transparent"></div>
+                    <div class="absolute bottom-0 p-10">
+                        <h3 class="text-3xl font-bold text-white mb-4 italic font-serif leading-none">Pé Diabético</h3>
+                        <p class="text-emerald-100/80 text-sm font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">Monitoramento de sensibilidade e prevenção de úlceras.</p>
+                        <button onclick="openChatWithAction('duvida_diabetes')" class="text-white font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-1">Consultar Técnica</button>
+                    </div>
+                </div>
+                <!-- Serviço 4 -->
+                <div class="group relative overflow-hidden rounded-[3rem] aspect-[3/4] shadow-2xl reveal" style="transition-delay: 0.3s;">
+                    <img src="https://images.unsplash.com/photo-1520222984843-df35ebc0f24d?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt="Laserterapia">
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/40 to-transparent"></div>
+                    <div class="absolute bottom-0 p-10">
+                        <h3 class="text-3xl font-bold text-white mb-4 italic font-serif leading-none">Laserterapia</h3>
+                        <p class="text-emerald-100/80 text-sm font-medium mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">Tecnologia fotodinâmica para tratamento de micoses severas.</p>
+                        <button onclick="openChatWithAction('duvida_laser')" class="text-white font-bold text-xs uppercase tracking-widest border-b border-white/30 pb-1">Consultar Técnica</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section id="agendamento">
-<h2>Agendamento</h2>
+    <!-- Sobre Section -->
+    <section id="sobre" class="py-32 bg-emerald-950 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-emerald-900/20 skew-x-12 translate-x-32"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-24">
+                <div class="lg:w-1/2 reveal">
+                    <div class="relative">
+                        <div class="absolute -top-12 -left-12 w-64 h-64 border-4 border-emerald-800 rounded-[4rem] -z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800" alt="Lavínia" class="rounded-[4rem] shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000">
+                        <div class="absolute -bottom-8 -right-8 glass-card p-8 rounded-3xl border-white/10 text-emerald-950">
+                            <p class="text-3xl font-bold font-serif italic mb-1">10+</p>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">Anos de Clínica</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 reveal">
+                    <span class="text-emerald-400 font-bold text-sm tracking-[0.4em] uppercase mb-6 block">Especialista</span>
+                    <h2 class="text-5xl lg:text-7xl font-bold mb-10 italic leading-tight">Lavínia <br><span class="font-serif not-italic font-light">Cuidado que inspira.</span></h2>
+                    <p class="text-xl text-emerald-100/70 mb-8 leading-relaxed font-light">
+                        Graduada e pós-graduada em Podologia Clínica, Lavínia dedica sua carreira ao estudo das patologias dos pés e ao desenvolvimento de técnicas minimamente invasivas.
+                    </p>
+                    <p class="text-xl text-emerald-100/70 mb-12 leading-relaxed font-light">
+                        Referência em biossegurança e atendimento de alta complexidade, seu consultório é um centro de excelência focado na recuperação total da saúde podológica.
+                    </p>
+                    <div class="flex flex-wrap gap-10">
+                        <div>
+                            <p class="text-emerald-400 font-bold mb-2">Formação</p>
+                            <p class="text-sm font-medium">Podologia Clínica Avançada</p>
+                        </div>
+                        <div>
+                            <p class="text-emerald-400 font-bold mb-2">Especialidade</p>
+                            <p class="text-sm font-medium">Laserterapia & Pé Diabético</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<form id="form" action="https://formsubmit.co/brunogaleia@hotmail.com" method="POST">
+    <!-- Contato Section -->
+    <section id="contato" class="py-32 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="bg-white rounded-[4rem] p-12 lg:p-24 shadow-2xl flex flex-col lg:flex-row gap-20 reveal">
+                <div class="lg:w-1/2">
+                    <h2 class="text-4xl lg:text-6xl font-bold text-emerald-950 italic mb-8 leading-none">Agende sua <br>Transformação.</h2>
+                    <p class="text-lg text-slate-500 mb-12 leading-relaxed">Redescubra o prazer de caminhar sem dor. Escolha o melhor canal de atendimento para você.</p>
+                    
+                    <div class="space-y-8">
+                        <div class="flex items-center gap-6 group cursor-pointer">
+                            <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-800 group-hover:bg-emerald-800 group-hover:text-white transition-all">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Localização</p>
+                                <p class="text-lg font-bold text-emerald-950">Av. Principal, 1234 - Sala 50 - Centro</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 group cursor-pointer">
+                            <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-800 group-hover:bg-emerald-800 group-hover:text-white transition-all">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Horários</p>
+                                <p class="text-lg font-bold text-emerald-950">Segunda a Sexta: 08h às 18h</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 flex flex-col justify-center gap-6">
+                    <button onclick="openChatWithAction('agendar')" class="w-full py-6 bg-emerald-800 text-white rounded-3xl font-bold text-xl hover:bg-emerald-900 transition shadow-xl shadow-emerald-900/20 flex items-center justify-center gap-4">
+                        <i class="fas fa-calendar-alt"></i>
+                        Agendamento Inteligente
+                    </button>
+                    <a href="https://wa.me/5511999999999" target="_blank" class="w-full py-6 bg-white border-2 border-emerald-100 text-emerald-800 rounded-3xl font-bold text-xl hover:bg-emerald-50 transition flex items-center justify-center gap-4">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp Direto
+                    </a>
+                    <p class="text-center text-xs text-slate-400 font-medium">Verificamos disponibilidade em tempo real via chat.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<input type="hidden" name="_next" value="https://laviniaslima7-design.github.io/meu-site/#agendamento">
-<input type="hidden" name="_captcha" value="false">
+    <!-- Footer -->
+    <footer class="bg-white py-20 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+            <div class="flex flex-col items-center mb-12">
+                <div class="w-16 h-16 bg-emerald-800 rounded-2xl flex items-center justify-center text-white mb-6">
+                    <i class="fas fa-shoe-prints text-2xl rotate-45"></i>
+                </div>
+                <h4 class="text-2xl font-bold text-emerald-950 italic mb-2">Lavínia Podologia</h4>
+                <p class="text-sm text-slate-400 font-bold uppercase tracking-[0.3em]">Clínica de Alta Performance</p>
+            </div>
+            
+            <div class="flex justify-center gap-8 mb-12">
+                <a href="#" class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-emerald-800 hover:text-white transition-all"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-emerald-800 hover:text-white transition-all"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-emerald-800 hover:text-white transition-all"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            
+            <p class="text-xs text-slate-300 font-medium tracking-widest">&copy; 2026 LAVÍNIA PODOLOGIA. TODOS OS DIREITOS RESERVADOS.</p>
+        </div>
+    </footer>
 
-<input type="text" name="Nome" placeholder="Nome completo" required>
-<input type="tel" name="Telefone" placeholder="Telefone" required>
+    <!-- Floating UI -->
+    <a href="https://wa.me/5511999999999" class="float-btn whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-<select name="Procedimento">
-<option>Unha inflamada</option>
-<option>Unha encravada</option>
-<option>Calos e calosidades</option>
-<option>Rachaduras</option>
-<option>Órtese</option>
-</select>
+    <div id="chatbot-trigger" class="float-btn chatbot-float">
+        <div class="relative">
+            <i class="fas fa-comment-medical"></i>
+            <span class="absolute -top-2 -right-2 w-4 h-4 bg-red-500 border-2 border-white rounded-full animate-ping"></span>
+        </div>
+    </div>
 
-<input type="date" name="Data" required>
-<input type="time" name="Horario" required>
+    <button id="back-to-top" class="float-btn back-to-top shadow-xl">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
-<button type="submit">Confirmar Agendamento</button>
+    <!-- Advanced Chatbot -->
+    <div id="chatbot-window">
+        <div class="chat-header">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-stethoscope text-sm"></i>
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full"></span>
+                </div>
+                <div>
+                    <span class="block font-bold leading-none mb-1">Suporte Lavínia</span>
+                    <span class="text-[10px] text-emerald-100 font-bold uppercase tracking-widest opacity-80">Online agora</span>
+                </div>
+            </div>
+            <button id="chat-close" class="text-white/70 hover:text-white transition"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div id="chat-body" class="chat-body">
+            <!-- Messages will be injected here -->
+        </div>
+        
+        <div class="chat-footer">
+            <div class="chat-input-group">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Digite sua dúvida aqui...">
+                <button id="chat-send" class="text-emerald-600 hover:text-emerald-800 transition"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
 
-<div class="success" id="msg">Agendamento enviado com sucesso! ✅</div>
+    <script>
+        // Data & Hours Management
+        const CLINIC_HOURS = { start: 8, end: 18 };
+        const DAYS_OF_WEEK = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
-</form>
-</section>
+        function updateClinicStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay();
+            const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            const isOpen = day >= 1 && day <= 5 && hour >= CLINIC_HOURS.start && hour < CLINIC_HOURS.end;
+            
+            const dot = document.getElementById('status-dot');
+            const text = document.getElementById('status-text');
+            const timeDisplay = document.getElementById('current-time');
+            
+            if (timeDisplay) timeDisplay.innerText = timeStr;
+            
+            if (isOpen) {
+                if(dot) dot.className = "w-3 h-3 rounded-full bg-emerald-500 animate-pulse";
+                if(text) text.innerText = "Atendimento Aberto";
+                if(text) text.className = "text-sm font-bold text-emerald-900 tracking-wide uppercase";
+            } else {
+                if(dot) dot.className = "w-3 h-3 rounded-full bg-red-500";
+                if(text) text.innerText = "Clínica Fechada";
+                if(text) text.className = "text-sm font-bold text-red-900 tracking-wide uppercase";
+            }
+        }
+        setInterval(updateClinicStatus, 10000);
+        updateClinicStatus();
 
-<section class="contato">
-<h2>Contato</h2>
-<p>(32) 9 9801-6614</p>
-<p>@laviniapodologa</p>
-<p>Praça Cabo Teixeira, nº 172 - Descoberto MG</p>
+        // Navbar & Scroll Logic
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            const btt = document.getElementById('back-to-top');
+            if (window.scrollY > 100) {
+                nav.classList.add('py-2');
+                btt.classList.add('visible');
+            } else {
+                nav.classList.remove('py-2');
+                btt.classList.remove('visible');
+            }
+        });
 
-<br>
-<a class="btn" href="https://wa.me/5532998016614">Falar no WhatsApp</a>
-</section>
+        // Back to top
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
-<footer>
-<p>© 2026 Lavínia Silva - Podologia</p>
-</footer>
+        // Animations on Scroll
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                const elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    el.classList.add("active");
+                }
+            });
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
 
-<a class="whatsapp" href="https://wa.me/5532998016614">💬</a>
+        // Chatbot Logic
+        const chatTrigger = document.getElementById('chatbot-trigger');
+        const chatWindow = document.getElementById('chatbot-window');
+        const chatClose = document.getElementById('chat-close');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
 
-<script>
-document.getElementById('form').addEventListener('submit', function(){
-document.getElementById('msg').style.display = 'block';
-});
-</script>
+        let chatStep = 'init';
+        let userData = {};
 
+        chatTrigger.addEventListener('click', () => {
+            const isVisible = chatWindow.style.display === 'flex';
+            chatWindow.style.display = isVisible ? 'none' : 'flex';
+            if (!isVisible && chatBody.children.length === 0) {
+                startChat();
+            }
+        });
+
+        chatClose.addEventListener('click', () => chatWindow.style.display = 'none');
+
+        function startChat() {
+            addMessage("Olá! Sou o assistente virtual da clínica Lavínia. 🦶✨", 'bot');
+            setTimeout(() => {
+                addMessage("Como posso ajudar na saúde dos seus pés hoje?", 'bot');
+                addOptions([
+                    { label: "📅 Agendar minha 1ª consulta", action: "agendar" },
+                    { label: "🕒 Verificar se estão abertos agora", action: "check_hours" },
+                    { label: "❓ Tirar dúvidas sobre tratamentos", action: "duvidas" },
+                    { label: "👤 Falar com Lavínia (WhatsApp)", action: "whatsapp" }
+                ]);
+            }, 600);
+        }
+
+        function addMessage(text, type = 'bot') {
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble chat-${type} animate__animated animate__fadeInUp animate__faster`;
+            bubble.innerHTML = text;
+            chatBody.appendChild(bubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function addOptions(options) {
+            const container = document.createElement('div');
+            container.className = "chat-options-grid animate__animated animate__fadeIn";
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "chat-btn";
+                btn.innerHTML = opt.label;
+                btn.onclick = () => handleChatAction(opt.action, opt.label);
+                container.appendChild(btn);
+            });
+            chatBody.appendChild(container);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function handleChatAction(action, label) {
+            if (label) addMessage(label, 'user');
+            
+            setTimeout(() => {
+                switch(action) {
+                    case 'agendar':
+                        addMessage("Excelente decisão! Para agilizar, qual seu **nome completo**?", 'bot');
+                        chatStep = 'waiting_name';
+                        break;
+                    case 'check_hours':
+                        const now = new Date();
+                        const hour = now.getHours();
+                        const day = now.getDay();
+                        const isOpen = day >= 1 && day <= 5 && hour >= CLINIC_HOURS.start && hour < CLINIC_HOURS.end;
+                        
+                        if (isOpen) {
+                            addMessage(`Sim! Estamos **ABERTOS** agora. Atendemos até as 18:00.`, 'bot');
+                        } else {
+                            addMessage(`No momento a clínica está fechada. Nosso horário é de Segunda a Sexta, das 08:00 às 18:00.`, 'bot');
+                        }
+                        addMessage("Deseja deixar seus dados para entrarmos em contato e agendar?", 'bot');
+                        addOptions([
+                            { label: "Sim, quero agendar", action: "agendar" },
+                            { label: "Não, obrigado", action: "init" }
+                        ]);
+                        break;
+                    case 'duvidas':
+                        addMessage("Sobre qual procedimento você gostaria de saber mais?", 'bot');
+                        addOptions([
+                            { label: "Unha Encravada", action: "duvida_unha" },
+                            { label: "Calosidades", action: "duvida_calos" },
+                            { label: "Laserterapia", action: "duvida_laser" },
+                            { label: "Pé Diabético", action: "duvida_diabetes" }
+                        ]);
+                        break;
+                    case 'duvida_unha':
+                        addMessage("A **Onicocriptose** (unha encravada) é tratada com técnicas minimamente invasivas para alívio imediato da dor e correção do crescimento.", 'bot');
+                        promptAgendamento();
+                        break;
+                    case 'duvida_calos':
+                        addMessage("Realizamos o desbastamento indolor de calos e calosidades, tratando a causa da pressão e hidratando profundamente a região.", 'bot');
+                        promptAgendamento();
+                        break;
+                    case 'duvida_laser':
+                        addMessage("A **Laserterapia** é indolor e altamente eficaz para micoses, verrugas plantares e cicatrização de feridas.", 'bot');
+                        promptAgendamento();
+                        break;
+                    case 'duvida_diabetes':
+                        addMessage("O atendimento para diabéticos foca na prevenção de úlceras e testes de sensibilidade, garantindo a integridade dos pés.", 'bot');
+                        promptAgendamento();
+                        break;
+                    case 'whatsapp':
+                        addMessage("Encaminhando você para o WhatsApp oficial...", 'bot');
+                        setTimeout(() => window.open('https://wa.me/5511999999999', '_blank'), 1000);
+                        break;
+                    case 'init':
+                        startChat();
+                        break;
+                }
+            }, 500);
+        }
+
+        function promptAgendamento() {
+            setTimeout(() => {
+                addMessage("Gostaria de agendar uma avaliação para este caso?", 'bot');
+                addOptions([
+                    { label: "Sim, agendar", action: "agendar" },
+                    { label: "Ver outras opções", action: "init" }
+                ]);
+            }, 1000);
+        }
+
+        // Fluxo de Cadastro via Chat
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        chatSend.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                if (chatStep === 'waiting_name') {
+                    userData.name = text;
+                    addMessage(`Prazer, ${text.split(' ')[0]}! Agora, qual seu **WhatsApp** para confirmarmos o horário?`, 'bot');
+                    chatStep = 'waiting_phone';
+                } else if (chatStep === 'waiting_phone') {
+                    userData.phone = text;
+                    addMessage("Perfeito. Qual o melhor **dia e horário** que você gostaria de vir? (Ex: Segunda às 14h)", 'bot');
+                    chatStep = 'waiting_time';
+                } else if (chatStep === 'waiting_time') {
+                    userData.time = text;
+                    addMessage("Vou verificar a disponibilidade aqui... Só um momento.", 'bot');
+                    setTimeout(() => {
+                        addMessage(`**Cadastro realizado com sucesso!** ✅<br><br>Lavínia entrará em contato em instantes no número ${userData.phone} para confirmar seu horário das ${text}.`, 'bot');
+                        chatStep = 'init';
+                    }, 2000);
+                } else {
+                    addMessage("Entendi. Para um atendimento mais preciso, escolha uma das opções acima ou fale com a Lavínia no WhatsApp.", 'bot');
+                }
+            }, 800);
+        }
+
+        // Função externa para abrir chat em pontos específicos
+        window.openChatWithAction = function(action) {
+            chatWindow.style.display = 'flex';
+            if (chatBody.children.length === 0) startChat();
+            handleChatAction(action);
+        };
+    </script>
 </body>
 </html>
