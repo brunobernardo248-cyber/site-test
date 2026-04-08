@@ -315,11 +315,17 @@
             <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 text-2xl shadow-inner">
                 <i class="fas fa-check"></i>
             </div>
-            <h3 class="text-xl font-bold text-emerald-950 mb-3 italic">Dados Recebidos!</h3>
-            <p id="modalMessage" class="text-slate-500 text-xs font-medium leading-relaxed mb-10">Lavínia foi notificada e entrará em contato com você em breve.</p>
+            <h3 class="text-2xl font-bold text-emerald-950 mb-3 italic">Dados Recebidos!</h3>
+            <p id="modalMessage" class="text-slate-500 text-xs font-medium leading-relaxed mb-10">Notificação enviada com sucesso para a Lavínia! ✅</p>
             
-            <button onclick="closeModal()" class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto group">
-                <i class="fas fa-arrow-left text-[8px] group-hover:-translate-x-1 transition-transform"></i>
+            <!-- Botão Principal (como na imagem) -->
+            <button onclick="closeModal()" class="btn-primary w-full mb-6 py-4 rounded-2xl shadow-lg shadow-emerald-900/20 font-bold uppercase tracking-widest text-xs">
+                Finalizado
+            </button>
+
+            <!-- Botão Pequeno e Sofisticado de Voltar -->
+            <button onclick="closeModal()" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-300 hover:text-emerald-700 transition-colors duration-300 flex items-center justify-center gap-2 mx-auto group">
+                <i class="fas fa-chevron-left text-[7px] group-hover:-translate-x-1 transition-transform"></i>
                 Voltar ao Início
             </button>
         </div>
@@ -365,11 +371,6 @@
             
             // Simula o envio "invisível" nos logs
             console.log("Notificação enviada para Lavínia:", tempUserData);
-
-            // Fecha o modal automaticamente após 3 segundos
-            setTimeout(() => {
-                closeModal();
-            }, 3000);
         });
 
         const chatSendBtn = document.getElementById('chatSendBtn');
