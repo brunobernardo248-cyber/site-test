@@ -152,6 +152,7 @@
             border-radius: 15px;
             font-size: 14px;
             line-height: 1.5;
+            white-space: pre-wrap;
         }
         .bot-msg {
             background: white;
@@ -197,10 +198,14 @@
             flex: 1;
             border: 1px solid #e2e8f0;
             padding: 10px 15px;
-            border-radius: 20px;
+            border-radius: 15px;
             outline: none;
             font-size: 14px;
             background: #f8fafc;
+            resize: none;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -303,8 +308,8 @@
             <!-- Messages injected here -->
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Escreva sua dúvida...">
-            <button id="chatSendBtn" class="text-emerald-700 p-2"><i class="fas fa-paper-plane"></i></button>
+            <textarea id="chatInput" class="chat-input" placeholder="Escreva sua dúvida..." rows="1"></textarea>
+            <button id="chatSendBtn" class="text-emerald-700 p-2 self-end mb-1"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -337,11 +342,21 @@
         let tempUserData = {};
         let pendingMessages = [];
         let sendTimer = null;
+        let confirmationSent = false;
 
         // Form Submission
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
+            const dateInput = document.getElementById('formDate');
+            const selectedDate = new Date(dateInput.value + 'T00:00:00');
+            const dayOfWeek = selectedDate.getDay(); // 0 = Domingo, 6 = Sábado
+
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                alert("A Lavínia não atende aos finais de semana (Sábado e Domingo). Por favor, selecione um dia útil.");
+                return;
+            }
+
             // Validação de horário extra via JS (até 20:00)
             const timeInput = document.getElementById('formTime');
             const selectedTime = timeInput.value;
@@ -372,7 +387,18 @@
         const chatSendBtn = document.getElementById('chatSendBtn');
 
         chatSendBtn.onclick = () => sendChatMessage();
-        chatInput.onkeypress = (e) => { if (e.key === 'Enter') sendChatMessage(); };
+        
+        chatInput.oninput = function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        };
+
+        chatInput.onkeydown = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        };
 
         function toggleChat() {
             isChatOpen = !isChatOpen;
@@ -390,6 +416,7 @@
                 chatStep = 'waiting_doubt';
                 chatInput.value = '';
                 pendingMessages = [];
+                confirmationSent = false;
                 if (sendTimer) clearTimeout(sendTimer);
             }
         }
@@ -423,12 +450,21 @@
             addUserMessage(text);
             pendingMessages.push(text);
             chatInput.value = '';
+            chatInput.style.height = 'auto';
 
             // Limpa o temporizador anterior para "esperar" o cliente terminar de escrever
             if (sendTimer) clearTimeout(sendTimer);
 
-            // Aguarda 4 segundos de silêncio para assumir que o cliente terminou
+            // Aguarda 7 segundos de silêncio para assumir que o cliente terminou
             sendTimer = setTimeout(() => {
+                if (confirmationSent) {
+                    // Se já enviamos a confirmação nesta sessão, apenas logamos as novas mensagens silenciosamente
+                    const fullMessage = pendingMessages.join("\n");
+                    console.log("Mensagens adicionais recebidas (32 99903-6230):", fullMessage);
+                    pendingMessages = [];
+                    return;
+                }
+
                 const sendingMsg = addBotMessage("<i class='fas fa-paper-plane fa-spin mr-2'></i> Enviando sua dúvida para a Lavínia...");
                 
                 // Simulação de envio invisível (agrupando tudo o que foi escrito)
@@ -437,13 +473,14 @@
                 
                 // Limpa a lista de mensagens pendentes após o envio
                 pendingMessages = [];
+                confirmationSent = true;
 
                 setTimeout(() => {
                     if (sendingMsg) sendingMsg.remove();
                     addBotMessage("Sua mensagem foi entregue com sucesso! ✅");
                     addBotMessage("A Lavínia recebeu sua dúvida e entrará em contato com você em breve.");
                 }, 2000);
-            }, 4000); 
+            }, 7000); 
         }
 
         function closeModal() {
@@ -461,6 +498,13 @@
             const dot = document.getElementById('status-dot');
             if (dot) {
                 dot.className = isOpen ? "w-2 h-2 rounded-full bg-emerald-500 animate-pulse" : "w-2 h-2 rounded-full bg-red-500";
+            }
+
+            // Define data mínima como hoje
+            const dateInput = document.getElementById('formDate');
+            if (dateInput) {
+                const today = now.toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
             }
         }
         updateStatus();
