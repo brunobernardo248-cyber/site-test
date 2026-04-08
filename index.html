@@ -13,8 +13,8 @@
             --primary: #5b705a; 
             --primary-light: #8fa68c; 
             --cream-bg: #f9f6f0; 
-            --text-dark: #1a1d1a;
-            --accent: #d4a373; /* tom de bronze/dourado para detalhes */
+            --text-dark: #1a1d1a; 
+            --accent: #d4a373; 
         }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -31,12 +31,10 @@
             letter-spacing: -0.02em;
         }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--cream-bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
 
-        /* Background Elements */
         .bg-circle {
             position: absolute;
             border-radius: 50%;
@@ -44,7 +42,6 @@
             z-index: -1;
         }
 
-        /* Hero Section Refinement */
         .hero-section {
             background: linear-gradient(135deg, var(--primary-light) 0%, #7d947a 100%);
             position: relative;
@@ -57,13 +54,11 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
         }
 
-        /* Sophisticated Form Container */
         .form-card {
             background: white;
             border: 1px solid rgba(143, 166, 140, 0.15);
             box-shadow: 0 40px 100px -20px rgba(91, 112, 90, 0.12);
             border-radius: 3rem;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .form-input {
@@ -75,6 +70,7 @@
             outline: none;
             transition: all 0.3s ease;
             font-size: 0.95rem;
+            color: var(--text-dark);
         }
         .form-input:focus {
             border-color: var(--primary-light);
@@ -99,7 +95,6 @@
             background: #4a5c49;
         }
 
-        /* Treatment List Refinement */
         .treatment-item {
             position: relative;
             padding-left: 1.8rem;
@@ -116,7 +111,6 @@
             font-weight: 300;
         }
 
-        /* Avatar & Bubble Refinement */
         .professional-photo-container {
             position: relative;
         }
@@ -146,7 +140,25 @@
             transform: translateY(-3px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
-    </style>
+
+        .whatsapp-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 100;
+        }
         .whatsapp-bubble:hover {
             transform: scale(1.1) rotate(5deg);
         }
@@ -154,7 +166,7 @@
         /* Chatbot Styles */
         #chatbot-window {
             position: fixed;
-            bottom: 100px;
+            bottom: 100px; 
             right: 30px;
             width: 350px;
             max-width: 90vw;
@@ -171,7 +183,7 @@
         }
         .chat-avatar {
             width: 35px;
-            height: 35px;
+            height: 35px; 
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255,255,255,0.8);
@@ -210,6 +222,7 @@
             align-self: flex-start;
             border-bottom-left-radius: 2px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            color: var(--text-dark);
         }
         .user-msg {
             background: var(--primary);
@@ -217,39 +230,18 @@
             align-self: flex-end;
             border-bottom-right-radius: 2px;
         }
-        .chat-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .option-btn {
-            background: white;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-        .option-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
         .chat-input-area {
             padding: 15px;
             border-top: 1px solid #f1f5f9;
             display: flex;
             align-items: flex-end;
             gap: 10px;
+            background: white;
         }
         .message img {
             max-width: 100%;
             border-radius: 10px;
             margin-top: 5px;
-            cursor: pointer;
         }
         .chat-input {
             flex: 1;
@@ -263,6 +255,7 @@
             max-height: 120px;
             overflow-y: auto;
             line-height: 1.4;
+            color: var(--text-dark);
         }
     </style>
 </head>
@@ -337,29 +330,29 @@
 
             <form id="registrationForm" class="space-y-6">
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Nome Completo</label>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Nome Completo</label>
                     <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">WhatsApp</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">WhatsApp</label>
                         <input type="tel" id="formPhone" class="form-input text-sm px-4" placeholder="(00) 00000-0000" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Data</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Data</label>
                         <input type="date" id="formDate" class="form-input text-sm px-4" required>
                     </div>
                     <div class="col-span-2 md:col-span-1 space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1">Horário</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Horário</label>
                         <input type="time" id="formTime" class="form-input text-sm px-4" max="20:00" required>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-emerald-800 ml-1 flex justify-between">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1 flex justify-between">
                         <span>Principal Queixa</span>
-                        <span class="text-emerald-600 lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
+                        <span class="text-primary-light lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
                     </label>
                     <select id="formComplaint" class="form-input appearance-none">
                         <option value="">Selecione uma opção...</option>
@@ -382,7 +375,7 @@
             <!-- Status Indicator -->
             <div class="mt-8 pt-8 border-t border-slate-100 flex items-center justify-center gap-4">
                 <div id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Atendimento disponível: Seg a Sex - 08h às 18h</p>
+                <p class="text-[10px] font-bold text-primary uppercase tracking-widest opacity-60">Atendimento disponível: Seg a Sex - 08h às 18h</p>
             </div>
         </div>
     </main>
