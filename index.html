@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #3d4a3c; /* verde sálvia mais escuro para melhor contraste */
-            --primary-light: #8fa68c; 
+            --primary: #2d382c; /* verde sálvia bem escuro para contraste máximo */
+            --primary-light: #5b705a; 
             --cream-bg: #fdfaf5; 
-            --text-dark: #1a1d1a; 
-            --accent: #b5835a; /* bronze mais saturado */
+            --text-dark: #000000; /* preto puro para textos principais */
+            --accent: #8b5e34; /* bronze mais escuro */
         }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -24,7 +24,7 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            letter-spacing: -0.01em;
+            letter-spacing: 0.01em;
         }
         h1, h2, h3, .font-serif {
             font-family: 'Playfair Display', serif;
@@ -113,18 +113,59 @@
 
         .professional-photo-container {
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .professional-photo-container::after {
             content: "";
             position: absolute;
-            inset: -15px;
-            border: 1px dashed rgba(255, 255, 255, 0.4);
+            inset: -20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            animation: rotate 20s linear infinite;
+            animation: rotate 30s linear infinite;
+        }
+        .professional-photo-container::before {
+            content: "";
+            position: absolute;
+            inset: -10px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite reverse;
         }
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        .professional-img-wrapper {
+            width: 280px;
+            height: 280px;
+            background: white;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 10px solid white;
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @media (min-width: 768px) {
+            .professional-img-wrapper {
+                width: 450px;
+                height: 450px;
+                border-width: 15px;
+            }
+        }
+        .professional-img-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 40px 80px -15px rgba(0,0,0,0.35);
+        }
+        .professional-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%; /* Ajuste para focar mais no rosto caso seja um portrait */
         }
 
         .contact-pill {
@@ -182,12 +223,14 @@
             animation: slideUp 0.3s ease-out;
         }
         .chat-avatar {
-            width: 35px; 
-            height: 35px; 
+            width: 40px; 
+            height: 40px; 
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid white;
+            object-position: center;
+            border: 2px solid rgba(255,255,255,0.8);
             background: #f1f5f9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
@@ -273,18 +316,18 @@
         <!-- Left Side: Branding & Treatments -->
         <div class="flex-1 max-w-xl animate__animated animate__fadeInLeft z-10">
             <div class="flex flex-col gap-6 mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full border border-white/20 w-fit">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 rounded-full border border-white/30 w-fit">
                     <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80">Podologia de Excelência</span>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Podologia de Excelência</span>
                 </div>
                 <h1 class="text-5xl md:text-7xl font-bold text-white italic leading-[1.1]">Lavínia Silva</h1>
-                <p class="text-white/70 text-lg font-light max-w-md">Especialista em cuidados clínicos avançados para a saúde e bem-estar dos seus pés.</p>
+                <p class="text-white text-lg font-medium max-w-md">Especialista em cuidados clínicos avançados para a saúde e bem-estar dos seus pés.</p>
             </div>
 
             <div class="hero-content-card p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
-                <h2 class="text-xs font-bold mb-8 uppercase tracking-[0.3em] text-accent/90">Especialidades:</h2>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-white/90 font-medium">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
+                <h2 class="text-xs font-bold mb-8 uppercase tracking-[0.3em] text-white">Especialidades:</h2>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-white font-bold">
                     <li class="treatment-item text-sm">Unha inflamada</li>
                     <li class="treatment-item text-sm">Unha encravada</li>
                     <li class="treatment-item text-sm">Calos e calosidades</li>
@@ -297,12 +340,12 @@
         <!-- Right Side: Photo & Quick Contact -->
         <div class="flex-1 flex flex-col items-center justify-center animate__animated animate__fadeInRight z-10">
             <div class="professional-photo-container">
-                <div class="w-72 h-72 md:w-[420px] md:h-[420px] bg-white rounded-full overflow-hidden border-[12px] border-white/10 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] transition-all duration-700 hover:rotate-2">
-                    <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" alt="Lavínia Silva" class="w-full h-full object-cover">
+                <div class="professional-img-wrapper">
+                    <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" alt="Lavínia Silva">
                 </div>
                 
                 <!-- Floating Contacts -->
-                <div class="absolute -bottom-6 -left-6 md:-left-12 flex flex-col gap-3">
+                <div class="absolute -bottom-6 -left-6 md:-left-12 flex flex-col gap-3 z-10">
                     <a href="https://wa.me/5532999036230" target="_blank" class="contact-pill flex items-center gap-3">
                         <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">
                             <i class="fab fa-whatsapp"></i>
@@ -331,31 +374,31 @@
 
             <form id="registrationForm" class="space-y-6">
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Nome Completo</label>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Nome Completo</label>
                     <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">WhatsApp</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">WhatsApp</label>
                         <input type="tel" id="formPhone" class="form-input text-sm px-4" placeholder="(00) 00000-0000" required>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Data</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Data</label>
                         <input type="date" id="formDate" class="form-input text-sm px-4" required>
                     </div>
                     <div class="col-span-2 md:col-span-1 space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Horário</label>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Horário</label>
                         <input type="time" id="formTime" class="form-input text-sm px-4" max="20:00" required>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-primary ml-1 flex justify-between">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1 flex justify-between">
                         <span>Principal Queixa</span>
-                        <span class="text-primary-light lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
+                        <span class="text-primary font-bold lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
                     </label>
-                    <select id="formComplaint" class="form-input appearance-none">
+                    <select id="formComplaint" class="form-input appearance-none text-slate-900">
                         <option value="">Selecione uma opção...</option>
                         <option value="unha">Unhas Encravadas</option>
                         <option value="calos">Calos e Calosidades</option>
@@ -382,21 +425,21 @@
     </main>
 
     <!-- Footer -->
-    <footer class="py-12 text-center text-emerald-900 text-[10px] font-bold tracking-[0.2em] uppercase bg-white/30 backdrop-blur-sm border-t border-emerald-100">
-        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+    <footer class="py-16 text-center text-slate-900 text-[10px] font-bold tracking-[0.2em] uppercase bg-white/50 backdrop-blur-sm border-t border-emerald-100">
+        <div class="max-w-5xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
             <div>
-                <p class="mb-2">laviniapodologa.com.br</p>
-                <p class="text-emerald-600">Lavínia Silva &copy; 2026</p>
+                <p class="mb-2 tracking-[0.3em]">laviniapodologa.com.br</p>
+                <p class="text-primary">Lavínia Silva &copy; 2026</p>
             </div>
-            <div class="flex flex-col items-center gap-2">
-                <i class="fas fa-location-dot text-emerald-600 text-base mb-1"></i>
-                <p>Praça Caboclo Teixeira, nº 172</p>
-                <p>Térreo - Descoberto MG</p>
+            <div class="flex flex-col items-center gap-3">
+                <i class="fas fa-location-dot text-accent text-lg"></i>
+                <p class="font-bold">Praça Caboclo Teixeira, nº 172</p>
+                <p class="opacity-70">Térreo - Descoberto MG</p>
             </div>
-            <div class="flex flex-col items-center gap-2">
-                <i class="fab fa-instagram text-emerald-600 text-base mb-1"></i>
-                <p>@laviniapodologa</p>
-                <p>(32) 99903-6230</p>
+            <div class="flex flex-col items-center gap-3">
+                <i class="fab fa-instagram text-accent text-lg"></i>
+                <p class="font-bold">@laviniapodologa</p>
+                <p class="opacity-70">(32) 99903-6230</p>
             </div>
         </div>
     </footer>
