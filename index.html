@@ -754,9 +754,20 @@
             if (open) {
                 chatWindow.classList.add('is-open');
                 if (chatMessages.children.length === 0) {
-                    addBotMessage("Olá! Sou o assistente da Lavínia Silva.");
-                    addBotMessage("Como posso te ajudar hoje? Pode escrever sua dúvida aqui embaixo, que a Lavínia te responderá em breve.");
-                    chatStep = 'waiting_doubt';
+    addBotMessage(`Olá! 😊
+
+Para te atender melhor, clique abaixo e fale direto com a Lavínia no WhatsApp:
+
+👉 https://wa.me/5532999036230
+
+Você pode enviar:
+• Mensagens
+• Fotos
+• Áudios
+• Tudo direto por lá 💚`);
+    
+    chatStep = 'waiting_doubt';
+}
                 }
                 setTimeout(() => {
                     isChatAnimating = false;
