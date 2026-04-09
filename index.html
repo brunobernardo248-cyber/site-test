@@ -754,20 +754,22 @@
             if (open) {
                 chatWindow.classList.add('is-open');
             
-            if (chatMessages.children.length === 0) {
-             addBotMessage(`Olá! 😊 
-            Para te atender melhor, clique abaixo e fale direto com a Lavínia no WhatsApp:
+           if (chatMessages.children.length === 0) {
+    addBotMessage(`Olá! 😊
 
-           👉 https://wa.me/5532999036230
+Para te atender melhor, clique abaixo e fale direto com a Lavínia no WhatsApp:
 
-             Você pode enviar:
-             • Mensagens
-             • Fotos
-             • Áudios
-             • Tudo direto por lá 💚`);
+👉 <a href="https://wa.me/5532999036230" target="_blank" style="color:#25d366;font-weight:bold;">Clique aqui para conversar</a>
+
+Você pode enviar:
+• Mensagens
+• Fotos
+• Áudios
+• Tudo direto por lá 💚`);
     
-                chatStep = 'waiting_doubt';
-            }
+    chatStep = 'waiting_doubt';
+}
+                
                 setTimeout(() => {
                     isChatAnimating = false;
                     chatInput.focus();
