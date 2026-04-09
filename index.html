@@ -59,6 +59,29 @@
             border: 1px solid rgba(143, 166, 140, 0.2);
             box-shadow: 0 40px 100px -20px rgba(61, 74, 60, 0.15);
             border-radius: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-watermark {
+            position: absolute;
+            right: -48px;
+            bottom: -56px;
+            width: 240px;
+            height: 240px;
+            opacity: 0.12;
+            transform: rotate(-8deg);
+            color: var(--primary-light);
+            pointer-events: none;
+            z-index: 0;
+        }
+        @media (min-width: 768px) {
+            .form-watermark {
+                right: -60px;
+                bottom: -70px;
+                width: 300px;
+                height: 300px;
+                opacity: 0.11;
+            }
         }
         
         .form-input {
@@ -338,13 +361,16 @@
 
             <div class="hero-content-card p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
-                <h2 class="text-xs font-bold mb-8 uppercase tracking-[0.3em] text-white">Especialidades:</h2>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-white font-bold">
-                    <li class="treatment-item text-sm">Unha inflamada</li>
-                    <li class="treatment-item text-sm">Unha encravada</li>
-                    <li class="treatment-item text-sm">Calos e calosidades</li>
-                    <li class="treatment-item text-sm">Rachaduras e fissuras</li>
-                    <li class="treatment-item text-sm col-span-full">Órtese para correção de deformidade</li>
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-sm md:text-base font-bold uppercase tracking-[0.28em] text-white/95">Especialidades:</h2>
+                    <span class="h-px flex-1 bg-white/25"></span>
+                </div>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-white/95 font-semibold tracking-tight">
+                    <li class="treatment-item text-[13px] md:text-sm">Unha inflamada</li>
+                    <li class="treatment-item text-[13px] md:text-sm">Unha encravada</li>
+                    <li class="treatment-item text-[13px] md:text-sm">Calos e calosidades</li>
+                    <li class="treatment-item text-[13px] md:text-sm">Rachaduras e fissuras</li>
+                    <li class="treatment-item text-[13px] md:text-sm col-span-full">Órtese para correção de deformidade</li>
                 </ul>
             </div>
         </div>
@@ -379,60 +405,72 @@
     <!-- Main Content: Registration Form -->
     <main class="flex flex-col items-center justify-center p-8 md:p-24 bg-white/50 relative">
         <div class="form-card w-full max-w-2xl p-10 md:p-16 animate__animated animate__fadeInUp">
-            <div class="text-center mb-12">
-                <div class="w-12 h-1 bg-accent/30 mx-auto mb-6 rounded-full"></div>
-                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3 italic tracking-tight">Agendamento Online</h2>
-                <p class="text-slate-400 text-sm font-light tracking-wide">Inicie sua jornada de cuidado preenchendo o formulário abaixo.</p>
+            <div class="form-watermark" aria-hidden="true">
+                <svg viewBox="0 0 200 200" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="96" cy="96" r="78" stroke="currentColor" stroke-width="4"/>
+                    <path d="M78 55c-10 16-12 34-6 51 7 20 6 33-6 46" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M112 52c-12 20-14 44-6 66 4 12 3 22-6 33" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M128 128c14 6 26 18 34 34" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M150 150c4-6 10-10 17-12" stroke="currentColor" stroke-width="3.8" stroke-linecap="round"/>
+                    <path d="M144 158c2-7 6-12 12-16" stroke="currentColor" stroke-width="3.8" stroke-linecap="round"/>
+                    <path d="M156 162c3-6 8-10 14-12" stroke="currentColor" stroke-width="3.8" stroke-linecap="round"/>
+                </svg>
             </div>
-
-            <form id="registrationForm" class="space-y-6">
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Nome Completo</label>
-                    <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
+            <div class="relative z-10">
+                <div class="text-center mb-12">
+                    <div class="w-12 h-1 bg-accent/30 mx-auto mb-6 rounded-full"></div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3 italic tracking-tight">Agendamento Online</h2>
+                    <p class="text-slate-400 text-sm font-light tracking-wide">Inicie sua jornada de cuidado preenchendo o formulário abaixo.</p>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <form id="registrationForm" class="space-y-6">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">WhatsApp</label>
-                        <input type="tel" id="formPhone" class="form-input text-sm px-4" placeholder="(00) 00000-0000" required>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Nome Completo</label>
+                        <input type="text" id="formName" class="form-input" placeholder="Ex: Maria Oliveira" required>
                     </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">WhatsApp</label>
+                            <input type="tel" id="formPhone" class="form-input text-sm px-4" placeholder="(00) 00000-0000" required>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Data</label>
+                            <input type="date" id="formDate" class="form-input text-sm px-4" required>
+                        </div>
+                        <div class="col-span-2 md:col-span-1 space-y-1">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Horário</label>
+                            <input type="time" id="formTime" class="form-input text-sm px-4" max="20:00" required>
+                        </div>
+                    </div>
+
                     <div class="space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Data</label>
-                        <input type="date" id="formDate" class="form-input text-sm px-4" required>
+                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1 flex justify-between">
+                            <span>Principal Queixa</span>
+                            <span class="text-primary font-bold lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
+                        </label>
+                        <select id="formComplaint" class="form-input appearance-none text-slate-900">
+                            <option value="">Selecione uma opção...</option>
+                            <option value="unha">Unhas Encravadas</option>
+                            <option value="calos">Calos e Calosidades</option>
+                            <option value="diabetes">Pé Diabético</option>
+                            <option value="laser">Laserterapia / Micose</option>
+                            <option value="outro">Outros / Avaliação Geral</option>
+                        </select>
                     </div>
-                    <div class="col-span-2 md:col-span-1 space-y-1">
-                        <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1">Horário</label>
-                        <input type="time" id="formTime" class="form-input text-sm px-4" max="20:00" required>
+
+                    <div class="pt-4">
+                        <button type="submit" class="btn-primary w-full flex items-center justify-center gap-3">
+                            <span>Finalizar Cadastro</span>
+                            <i class="fas fa-chevron-right text-xs"></i>
+                        </button>
                     </div>
-                </div>
+                </form>
 
-                <div class="space-y-1">
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-slate-900 ml-1 flex justify-between">
-                        <span>Principal Queixa</span>
-                        <span class="text-primary font-bold lowercase italic cursor-pointer hover:underline" onclick="openChat()">Conversar com Lavínia?</span>
-                    </label>
-                    <select id="formComplaint" class="form-input appearance-none text-slate-900">
-                        <option value="">Selecione uma opção...</option>
-                        <option value="unha">Unhas Encravadas</option>
-                        <option value="calos">Calos e Calosidades</option>
-                        <option value="diabetes">Pé Diabético</option>
-                        <option value="laser">Laserterapia / Micose</option>
-                        <option value="outro">Outros / Avaliação Geral</option>
-                    </select>
+                <div class="mt-8 pt-8 border-t border-slate-100 flex items-center justify-center gap-4">
+                    <div id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <p class="text-[10px] font-bold text-primary uppercase tracking-widest opacity-60">Atendimento disponível: Seg a Sex - 08h às 18h</p>
                 </div>
-
-                <div class="pt-4">
-                    <button type="submit" class="btn-primary w-full flex items-center justify-center gap-3">
-                        <span>Finalizar Cadastro</span>
-                        <i class="fas fa-chevron-right text-xs"></i>
-                    </button>
-                </div>
-            </form>
-
-            <!-- Status Indicator -->
-            <div class="mt-8 pt-8 border-t border-slate-100 flex items-center justify-center gap-4">
-                <div id="status-dot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <p class="text-[10px] font-bold text-primary uppercase tracking-widest opacity-60">Atendimento disponível: Seg a Sex - 08h às 18h</p>
             </div>
         </div>
     </main>
@@ -470,9 +508,14 @@
                 <img src="chat.png.jpeg" class="chat-avatar" alt="Lavínia Silva" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20800%20800%27%3E%3Crect%20width=%27800%27%20height=%27800%27%20fill=%27%23f1f5f9%27/%3E%3Ctext%20x=%27400%27%20y=%27400%27%20text-anchor=%27middle%27%20dominant-baseline=%27middle%27%20fill=%27%23334155%27%20font-family=%27Arial%27%20font-size=%2742%27%3ELav%C3%ADnia%20Silva%3C/text%3E%3C/svg%3E';">
                 <span class="font-bold text-sm">Assistente Lavínia Silva</span>
             </div>
-            <button type="button" class="cursor-pointer opacity-70 hover:opacity-100" onclick="toggleChat()" aria-label="Minimizar chat">
-                <i class="fas fa-minus"></i>
-            </button>
+            <div class="flex items-center gap-3">
+                <button type="button" class="cursor-pointer opacity-70 hover:opacity-100" onclick="toggleChat()" aria-label="Minimizar chat">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="cursor-pointer opacity-70 hover:opacity-100" onclick="closeChat()" aria-label="Fechar chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
         <div id="chatMessages" class="chat-messages">
             <!-- Messages injected here -->
@@ -482,6 +525,47 @@
             <button onclick="document.getElementById('imageInput').click()" class="text-slate-400 hover:text-emerald-700 p-2 self-end mb-1 transition-colors">
                 <i class="fas fa-camera"></i>
             </button>
+            <div class="relative self-end mb-1">
+                <button id="emojiBtn" type="button" class="text-slate-400 hover:text-emerald-700 p-2 transition-colors" aria-label="Emojis">
+                    <i class="fa-regular fa-face-smile"></i>
+                </button>
+                <div id="emojiPicker" class="hidden absolute bottom-12 left-0 w-72 max-w-[70vw] bg-white border border-slate-200 rounded-2xl shadow-2xl p-2">
+                    <div class="grid grid-cols-8 gap-1 max-h-52 overflow-y-auto p-1">
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😀">😀</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😁">😁</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😂">😂</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🤣">🤣</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😊">😊</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😉">😉</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😍">😍</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😘">😘</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😅">😅</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😬">😬</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😴">😴</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🤒">🤒</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😢">😢</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😭">😭</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="😡">😡</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🤝">🤝</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="👍">👍</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="👎">👎</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🙏">🙏</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="👏">👏</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🔥">🔥</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="✨">✨</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="💚">💚</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🤍">🤍</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🦶">🦶</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🩹">🩹</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🧴">🧴</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="🦠">🦠</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="📅">📅</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="⏰">⏰</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="📍">📍</button>
+                        <button type="button" class="w-8 h-8 rounded-lg hover:bg-slate-100" data-emoji="💬">💬</button>
+                    </div>
+                </div>
+            </div>
             <textarea id="chatInput" class="chat-input" placeholder="Escreva sua dúvida..." rows="1"></textarea>
             <button id="chatSendBtn" class="text-emerald-700 p-2 self-end mb-1"><i class="fas fa-paper-plane"></i></button>
         </div>
@@ -510,6 +594,8 @@
         const chatWindow = document.getElementById('chatbot-window');
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
+        const emojiBtn = document.getElementById('emojiBtn');
+        const emojiPicker = document.getElementById('emojiPicker');
 
         let isChatOpen = false;
         let chatStep = 'waiting_doubt';
@@ -518,6 +604,7 @@
         let sendTimer = null;
         let confirmationSent = false;
         let isChatAnimating = false;
+        let isEmojiOpen = false;
 
         // Form Submission
         form.addEventListener('submit', (e) => {
@@ -594,6 +681,7 @@
             }
 
             chatWindow.classList.remove('is-open');
+            setEmojiOpen(false);
             setTimeout(() => {
                 isChatAnimating = false;
             }, 260);
@@ -606,6 +694,78 @@
         function openChat() {
             if (!isChatOpen) toggleChat();
         }
+
+        function setEmojiOpen(open) {
+            isEmojiOpen = open;
+            if (!emojiPicker) return;
+            emojiPicker.classList.toggle('hidden', !open);
+        }
+
+        function insertEmoji(emoji) {
+            const value = chatInput.value || '';
+            const start = typeof chatInput.selectionStart === 'number' ? chatInput.selectionStart : value.length;
+            const end = typeof chatInput.selectionEnd === 'number' ? chatInput.selectionEnd : value.length;
+            const next = value.slice(0, start) + emoji + value.slice(end);
+            chatInput.value = next;
+            const cursor = start + emoji.length;
+            chatInput.setSelectionRange(cursor, cursor);
+            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+            chatInput.focus();
+        }
+
+        if (emojiBtn) {
+            emojiBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!isChatOpen) return;
+                setEmojiOpen(!isEmojiOpen);
+            });
+        }
+
+        if (emojiPicker) {
+            emojiPicker.addEventListener('click', (e) => {
+                const btn = e.target.closest('[data-emoji]');
+                if (!btn) return;
+                insertEmoji(btn.getAttribute('data-emoji') || '');
+            });
+        }
+
+        document.addEventListener('pointerdown', (e) => {
+            if (!isChatOpen) return;
+            if (!isEmojiOpen) return;
+            if (emojiPicker && emojiPicker.contains(e.target)) return;
+            if (emojiBtn && emojiBtn.contains(e.target)) return;
+            setEmojiOpen(false);
+        }, { capture: true });
+
+        function clearChat() {
+            chatMessages.innerHTML = '';
+            chatStep = 'waiting_doubt';
+            chatInput.value = '';
+            pendingMessages = [];
+            confirmationSent = false;
+            if (sendTimer) clearTimeout(sendTimer);
+            setEmojiOpen(false);
+        }
+
+        function closeChat() {
+            if (isChatAnimating) {
+                setTimeout(() => {
+                    if (isChatOpen) closeChat();
+                }, 280);
+                return;
+            }
+            clearChat();
+            setChatOpen(false);
+        }
+
+        const chatToggle = document.querySelector('.whatsapp-bubble');
+        document.addEventListener('pointerdown', (e) => {
+            if (!isChatOpen) return;
+            if (chatWindow.contains(e.target)) return;
+            if (chatToggle && chatToggle.contains(e.target)) return;
+            setChatOpen(false);
+        }, { capture: true });
 
         chatWindow.addEventListener('wheel', (e) => {
             if (!isChatOpen) return;
