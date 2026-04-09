@@ -68,9 +68,9 @@
             bottom: -56px;
             width: 240px;
             height: 240px;
-            opacity: 0.12;
+            opacity: 0.18;
             transform: rotate(-8deg);
-            color: var(--primary-light);
+            color: rgba(45, 56, 44, 0.55);
             pointer-events: none;
             z-index: 0;
         }
@@ -80,7 +80,7 @@
                 bottom: -70px;
                 width: 300px;
                 height: 300px;
-                opacity: 0.11;
+                opacity: 0.16;
             }
         }
         
@@ -295,6 +295,88 @@
             font-size: 14px;
             line-height: 1.5;
             white-space: pre-wrap;
+            position: relative;
+        }
+        .message-content {
+            white-space: pre-wrap;
+        }
+        .reaction-trigger {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 180ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+            user-select: none;
+            pointer-events: none;
+        }
+        .message:hover .reaction-trigger {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .reaction-badge {
+            position: absolute;
+            bottom: -12px;
+            right: 10px;
+            min-width: 26px;
+            height: 22px;
+            padding: 0 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            line-height: 1;
+            color: #0f172a;
+        }
+        .reaction-badge.is-visible {
+            display: flex;
+        }
+        .reaction-picker {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            right: -8px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 999px;
+            box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);
+            padding: 6px;
+            display: none;
+            gap: 6px;
+            z-index: 5;
+        }
+        .reaction-picker.is-open {
+            display: flex;
+        }
+        .reaction-emoji {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1), background 160ms ease;
+        }
+        .reaction-emoji:hover {
+            transform: translateY(-1px) scale(1.06);
+            background: rgba(241, 245, 249, 0.9);
         }
         .bot-msg {
             background: white;
@@ -605,6 +687,9 @@
         let confirmationSent = false;
         let isChatAnimating = false;
         let isEmojiOpen = false;
+        let messageIdCounter = 0;
+
+        const REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🙏"];
 
         // Form Submission
         form.addEventListener('submit', (e) => {
@@ -746,6 +831,7 @@
             confirmationSent = false;
             if (sendTimer) clearTimeout(sendTimer);
             setEmojiOpen(false);
+            messageIdCounter = 0;
         }
 
         function closeChat() {
@@ -789,7 +875,9 @@
         function addBotMessage(text) {
             const div = document.createElement('div');
             div.className = 'message bot-msg animate__animated animate__fadeIn';
-            div.innerHTML = text;
+            div.dataset.messageId = String(++messageIdCounter);
+            div.innerHTML = `<div class="message-content">${text}</div>`;
+            attachReactionsUI(div);
             chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return div;
@@ -798,11 +886,96 @@
         function addUserMessage(text) {
             const div = document.createElement('div');
             div.className = 'message user-msg animate__animated animate__fadeIn';
-            div.innerHTML = text;
+            div.dataset.messageId = String(++messageIdCounter);
+            div.innerHTML = `<div class="message-content">${text}</div>`;
+            attachReactionsUI(div);
             chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return div;
         }
+
+        function attachReactionsUI(messageEl) {
+            const trigger = document.createElement('button');
+            trigger.type = 'button';
+            trigger.className = 'reaction-trigger';
+            trigger.setAttribute('aria-label', 'Reagir');
+            trigger.innerHTML = `<i class="fa-regular fa-face-smile"></i>`;
+
+            const picker = document.createElement('div');
+            picker.className = 'reaction-picker';
+            for (const emoji of REACTION_EMOJIS) {
+                const eBtn = document.createElement('button');
+                eBtn.type = 'button';
+                eBtn.className = 'reaction-emoji';
+                eBtn.setAttribute('data-emoji', emoji);
+                eBtn.textContent = emoji;
+                picker.appendChild(eBtn);
+            }
+
+            const badge = document.createElement('div');
+            badge.className = 'reaction-badge';
+
+            messageEl.appendChild(trigger);
+            messageEl.appendChild(picker);
+            messageEl.appendChild(badge);
+        }
+
+        function closeAllReactionPickers() {
+            chatMessages.querySelectorAll('.reaction-picker.is-open').forEach((p) => p.classList.remove('is-open'));
+        }
+
+        function toggleReactionPicker(messageEl) {
+            const picker = messageEl.querySelector('.reaction-picker');
+            if (!picker) return;
+            const willOpen = !picker.classList.contains('is-open');
+            closeAllReactionPickers();
+            if (willOpen) picker.classList.add('is-open');
+        }
+
+        function setReaction(messageEl, emoji) {
+            const badge = messageEl.querySelector('.reaction-badge');
+            if (!badge) return;
+            const current = messageEl.dataset.reaction || '';
+            if (current === emoji) {
+                delete messageEl.dataset.reaction;
+                badge.textContent = '';
+                badge.classList.remove('is-visible');
+                return;
+            }
+            messageEl.dataset.reaction = emoji;
+            badge.textContent = emoji;
+            badge.classList.add('is-visible');
+        }
+
+        chatMessages.addEventListener('click', (e) => {
+            const trigger = e.target.closest('.reaction-trigger');
+            if (trigger) {
+                const msg = trigger.closest('.message');
+                if (!msg) return;
+                e.preventDefault();
+                e.stopPropagation();
+                toggleReactionPicker(msg);
+                return;
+            }
+
+            const emojiBtn = e.target.closest('.reaction-emoji');
+            if (emojiBtn) {
+                const msg = emojiBtn.closest('.message');
+                if (!msg) return;
+                const emoji = emojiBtn.getAttribute('data-emoji') || '';
+                if (!emoji) return;
+                e.preventDefault();
+                e.stopPropagation();
+                setReaction(msg, emoji);
+                closeAllReactionPickers();
+            }
+        });
+
+        document.addEventListener('pointerdown', (e) => {
+            if (!isChatOpen) return;
+            if (chatMessages.contains(e.target)) return;
+            closeAllReactionPickers();
+        }, { capture: true });
 
         function handleImageUpload(event) {
             const file = event.target.files[0];
@@ -845,7 +1018,7 @@
                 if (confirmationSent) {
                     // Se já enviamos a confirmação nesta sessão, apenas logamos as novas mensagens silenciosamente
                     const fullMessage = pendingMessages.join("\n");
-                    console.log("Mensagens adicionais recebidas (32 99903-6230):", fullMessage);
+                    console.log("Mensagens adicionais recebidas:", fullMessage);
                     pendingMessages = [];
                     return;
                 }
@@ -854,7 +1027,7 @@
                 
                 // Simulação de envio invisível (agrupando tudo o que foi escrito)
                 const fullMessage = pendingMessages.join("\n");
-                console.log("Dúvida completa enviada para Lavínia (32 99903-6230):", fullMessage);
+                console.log("Dúvida completa enviada:", fullMessage);
                 
                 // Limpa a lista de mensagens pendentes após o envio
                 pendingMessages = [];
