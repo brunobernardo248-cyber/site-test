@@ -139,12 +139,12 @@
         }
 
         .professional-img-wrapper {
-            width: 280px;
-            height: 280px;
+            width: 320px;
+            height: 320px;
             background: white;
             border-radius: 50%;
             overflow: hidden;
-            border: 10px solid white;
+            border: 12px solid white;
             box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
             position: relative;
             z-index: 2;
@@ -152,9 +152,9 @@
         }
         @media (min-width: 768px) {
             .professional-img-wrapper {
-                width: 450px;
-                height: 450px;
-                border-width: 15px;
+                width: 500px;
+                height: 500px;
+                border-width: 18px;
             }
         }
         .professional-img-wrapper:hover {
@@ -340,8 +340,9 @@
         <!-- Right Side: Photo & Quick Contact -->
         <div class="flex-1 flex flex-col items-center justify-center animate__animated animate__fadeInRight z-10">
             <div class="professional-photo-container">
-                <div class="professional-img-wrapper">
-                    <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" alt="Lavínia Silva">
+                <!-- PARTE DA FOTO PRINCIPAL --> 
+                <div class="professional-img-wrapper"> 
+                    <img src="foto.jpg" alt="Lavínia Silva"> 
                 </div>
                 
                 <!-- Floating Contacts -->
@@ -453,7 +454,8 @@
     <div id="chatbot-window">
         <div class="chat-header">
             <div class="flex items-center gap-3">
-                <img src="https://api.trae.ai/v1/user/file/OIP-C.E2fG5X7f8g9h0i1j2k3l4m5n6o7p8q9r0s1t2u3v4w5x6y7z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z" class="chat-avatar" alt="Lavínia Silva">
+                <!-- PARTE DO CHATBOT --> 
+                <img src="foto.jpg" class="chat-avatar" alt="Lavínia Silva">
                 <span class="font-bold text-sm">Assistente Lavínia Silva</span>
             </div>
             <i class="fas fa-times cursor-pointer opacity-70 hover:opacity-100" onclick="toggleChat()"></i>
